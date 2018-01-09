@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <mvc:annotation-driven/>
+
+    <bean id="userDAO" class="DAO.UserDAO"></bean>
+    <!--TODO: try to set sessionFactory here instead of setting in class-->
+    <bean id="userService" class="service.UserService">
+        <property name="userDAO" ref="userDAO"></property>
+    </bean>
+
+    <bean id="roomDAO" class="DAO.RoomDAO"></bean>
+    <bean id="roomService" class="service.RoomService">
+        <property name="roomDAO" ref="roomDAO"></property>
+    </bean>
+
+
+    <bean id="projectDAO" class="DAO.ProjectDAO"></bean>
+    <bean id="projectService" class="service.ProjectService">
+        <property name="projectDAO" ref="projectDAO"></property>
+    </bean>    <context:component-scan base-package="controllers"/>
+
+</beans>
