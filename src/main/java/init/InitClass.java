@@ -18,7 +18,7 @@ import java.util.Properties;
 
 public class InitClass {
 
-    public static void main(String[] args) {
+    public void initDatabase () {
         Properties properties = getProperties("src/main/resources/init_param.properties");
         String initPath = "src/main/resources/init.sql";
         String databaseName = properties.getProperty("databaseName");
@@ -43,7 +43,7 @@ public class InitClass {
     }
 
 
-    private static Properties getProperties(String path){
+    private Properties getProperties(String path){
         Properties properties = new Properties();
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(path)))) {
             properties.load(bufferedReader);
@@ -53,7 +53,7 @@ public class InitClass {
         return properties;
     }
 
-    private static void createInitialState(Statement statement, String initPath) throws SQLException {
+    private void createInitialState(Statement statement, String initPath) throws SQLException {
         String createTableSQL = getInitQuieries(initPath);
         Arrays.stream(createTableSQL.split(";")).filter(x -> (!x.equals("\n"))).forEach(x -> {
             try {
@@ -66,7 +66,7 @@ public class InitClass {
     }
 
 
-    private static String getInitQuieries(String path) {
+    private String getInitQuieries(String path) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             List lines = Files.readAllLines(Paths.get(path));

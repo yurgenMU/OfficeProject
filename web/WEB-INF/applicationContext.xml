@@ -14,6 +14,9 @@
 
 
     <mvc:annotation-driven/>
+    <bean id="initObject" class="init.InitClass"
+          init-method="initDatabase"></bean>
+
 
     <bean id="userDAO" class="DAO.UserDAO"></bean>
     <!--TODO: try to set sessionFactory here instead of setting in class-->
