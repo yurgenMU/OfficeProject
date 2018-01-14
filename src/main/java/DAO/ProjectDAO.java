@@ -6,9 +6,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class ProjectDAO implements EntityDAO {
     private SessionFactory sessionFactory;
 
@@ -41,6 +43,7 @@ public class ProjectDAO implements EntityDAO {
             Project modifiedProject = session.get(Project.class, project.getId());
             modifiedProject.setName(project.getName());
             modifiedProject.setId(project.getId());
+            modifiedProject.setUsers(project.getUsers());
             session.update(modifiedProject);
             transaction.commit();
         }

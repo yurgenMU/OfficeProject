@@ -1,6 +1,5 @@
 package controllers;//package controllers;
 
-import DAO.RoomDAO;
 import model.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

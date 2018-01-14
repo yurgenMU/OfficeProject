@@ -3,15 +3,12 @@ package model;
 import javax.persistence.*;
 import java.sql.Date;
 
-@Embeddable
 public class Usersdates {
+    private Date date;
     private int userId;
+    private User userByUserId;
 
     @Basic
-    @Temporal(TemporalType.TIME)
-    private Date date;
-
-
     @Column(name = "date", nullable = false)
     public Date getDate() {
         return date;
@@ -21,7 +18,7 @@ public class Usersdates {
         this.date = date;
     }
 
-
+    @Basic
     @Column(name = "userId", nullable = false)
     public int getUserId() {
         return userId;
@@ -39,15 +36,25 @@ public class Usersdates {
         Usersdates that = (Usersdates) o;
 
         if (userId != that.userId) return false;
-        return date != null ? date.equals(that.date) : that.date == null;
+        if (date != null ? !date.equals(that.date) : that.date != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = userId;
-        result = 31 * result + (date != null ? date.hashCode() : 0);
+        int result = date != null ? date.hashCode() : 0;
+        result = 31 * result + userId;
         return result;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "userId", referencedColumnName = "Id", nullable = false)
+    public User getUserByUserId() {
+        return userByUserId;
+    }
 
+    public void setUserByUserId(User userByUserId) {
+        this.userByUserId = userByUserId;
+    }
 }

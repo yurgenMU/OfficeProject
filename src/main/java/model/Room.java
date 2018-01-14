@@ -1,11 +1,16 @@
 package model;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Rooms")
 public class Room extends AbstractEntity{
     private String name;
+    private Set<User> users;
+
 
     @Id
     @Column(name = "Id", nullable = false)
@@ -27,15 +32,25 @@ public class Room extends AbstractEntity{
         this.name = name;
     }
 
-    @Override
+
+    @OneToMany(mappedBy = "room")
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+        @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Room rooms = (Room) o;
+        Room room = (Room) o;
 
-        if (id != rooms.id) return false;
-        if (name != null ? !name.equals(rooms.name) : rooms.name != null) return false;
+        if (id != room.id) return false;
+        if (name != null ? !name.equals(room.name) : room.name != null) return false;
 
         return true;
     }
@@ -46,4 +61,5 @@ public class Room extends AbstractEntity{
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
+
 }

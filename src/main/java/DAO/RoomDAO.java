@@ -6,9 +6,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class RoomDAO implements EntityDAO {
     private SessionFactory sessionFactory;
 

@@ -1,13 +1,14 @@
 package service;
 
-import DAO.EntityDAO;
 import DAO.UserDAO;
 import model.AbstractEntity;
+import model.Project;
 import model.User;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService implements EntityService{
@@ -47,4 +48,8 @@ public class UserService implements EntityService{
     }
 
 
+    @Transactional
+    public Set<Project> getProjects(int id){
+        return  userDAO.getProjects(id);
+    }
 }

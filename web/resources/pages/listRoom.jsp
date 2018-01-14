@@ -31,9 +31,9 @@
         </c:forEach>
         </tbody>
     </table>
-    <a href="/add" class="btn btn-info" role="button">Add Room</a>
-    <%--<button type="button" href="/add">Add User</button>--%>
-    <%--<p><a href=/add>Add User</a></p>--%>
+    <a href="rooms/add" class="btn btn-info" role="button">Add Room</a>
+    <%--<button type="button" href="/add">Add UserData</button>--%>
+    <%--<p><a href=/add>Add UserData</a></p>--%>
 </div>
 </body>
 </html>

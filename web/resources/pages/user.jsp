@@ -11,7 +11,7 @@
           href="css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="stylesheet"/>
     <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.18.custom.min.js"></script>
-    <title>Add new user</title>
+    <title>Add new userInfo</title>
 </head>
 <body>
 
@@ -19,18 +19,12 @@
 <%--<form method="POST" action='add' name="frmAddUser">--%>
 <form method="POST" action='add' name="frmAddUser">
 
-    First Name : <input
-        type="text" name="firstName"
-        value="${user.firstName}"> <br/>
-    Last Name : <input
-        type="text" name="lastName"
-        value="${user.lastName}"> <br/>
-    Speciality : <input
-        type="text" name="speciality"
-        value="${user.speciality}"> <br/>
-    Email : <input type="text" name="email"
-                   value="${user.email}"> <br/> <input
-        type="submit" value="Submit"/>
+    First Name : <input type="text" name="firstName" value="${user.firstName}"> <br/>
+    Last Name : <input type="text" name="lastName" value="${user.lastName}"> <br/>
+    Email : <input type="text" name="email" value="${user.email}"> <br/>
+    Login : <input type="text" name="login" value="${user.login}"> <br/>
+    Login : <input type="text" name="password" value="${user.password}"> <br/>
+    <input type="submit" value="Submit"/>
 </form>
 </body>
 </html>

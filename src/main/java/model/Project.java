@@ -1,11 +1,25 @@
 package model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "projects")
+@Table(name = "Projects")
 public class Project extends AbstractEntity{
     private String name;
+
+
+    private Set<User> users = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "projects")
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
 
     @Id
     @Column(name = "Id", nullable = false)
@@ -32,10 +46,10 @@ public class Project extends AbstractEntity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Project projects = (Project) o;
+        Project project = (Project) o;
 
-        if (id != projects.id) return false;
-        if (name != null ? !name.equals(projects.name) : projects.name != null) return false;
+        if (id != project.id) return false;
+        if (name != null ? !name.equals(project.name) : project.name != null) return false;
 
         return true;
     }
@@ -46,4 +60,5 @@ public class Project extends AbstractEntity{
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
+
 }

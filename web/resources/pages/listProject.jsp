@@ -18,22 +18,25 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Project Id</th>
-            <th>Name</th>
+            <%--<th>Project Id</th>--%>
+            <th>Project name</th>
+            <%--<th>Users</th>--%>
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${projects}" var="project">
+        <c:forEach items="${myProjects}" var="mproject">
             <tr>
-                <td>${project.id}</td>
-                <td>${project.name}</td>
+                <%--<td>${mproject.id}</td>--%>
+                <%--<td>${mproject.name}</td>--%>
+                <td><a href="usersByProject/${mproject.id}">${mproject.name}</a></td>
+                <%--<td>${mproject.users}</td>--%>
             </tr>
         </c:forEach>
         </tbody>
     </table>
-    <a href="/add" class="btn btn-info" role="button">Add Project</a>
-    <%--<button type="button" href="/add">Add User</button>--%>
-    <%--<p><a href=/add>Add User</a></p>--%>
+    <a href="projects/add" class="btn btn-info" role="button">Add new</a>
+    <%--<button type="button" href="/add">Add UserInfo</button>--%>
+    <%--<p><a href=/add>Add UserInfo</a></p>--%>
 </div>
 </body>
 </html>

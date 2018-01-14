@@ -1,9 +1,7 @@
 package service;
 
-import DAO.EntityDAO;
 import model.AbstractEntity;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 public interface EntityService {
