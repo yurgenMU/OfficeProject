@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestParam;
 import service.DateService;
 import service.UserService;
 
@@ -34,7 +34,7 @@ public class CalendarController {
         Calendar c = Calendar.getInstance();
         int y = c.get(Calendar.YEAR);
         int m = c.get(Calendar.MONTH) + 1;
-        Month month = new Month(y,m);
+        Month month = new Month(y, m);
         int[][] days = month.getDays();
         int height = month.getHeight();
         String monthName = month.getMonthName(m);
@@ -45,7 +45,8 @@ public class CalendarController {
         model.addAttribute("year", y);
         model.addAttribute("monthName", monthName);
         model.addAttribute("months", months);
-        return "calendar";
+        return "calendar12";
     }
+
 
 }
