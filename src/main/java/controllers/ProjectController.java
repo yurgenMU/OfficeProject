@@ -7,11 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import service.ProjectService;
+import service.UserService;
 
 import java.util.List;
 import java.util.Set;
@@ -20,7 +18,13 @@ import java.util.Set;
 public class ProjectController {
 
     private ProjectService projectService;
+    private UserService userService;
 
+    @Autowired
+    @Qualifier(value = "userService")
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @Autowired
     @Qualifier(value = "projectService")
@@ -37,8 +41,11 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "projects/add", method = RequestMethod.POST)
-    private String addNew(@ModelAttribute("mproject") Project mproject, Model model) {
+    private String addNew(@ModelAttribute("mproject") Project mproject,
+                          Model model,
+                          @RequestParam("selected")List<Integer> selectedUsers) {
         projectService.add(mproject);
+//        String[] selectedStudentIds = model.request.getParameterValues("selected");
         return "projects";
 
     }
@@ -50,7 +57,9 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "projects/add", method = RequestMethod.GET)
-    private String getAddPage() {
+    private String getAddPage(Model model) {
+        List<User> users = userService.getAll();
+        model.addAttribute(users);
         return "newProject";
     }
 

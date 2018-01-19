@@ -22,11 +22,10 @@ CREATE TABLE IF NOT EXISTS Users (
 
 
 CREATE TABLE IF NOT EXISTS Projects (
-  Id   INT          ,
-  Name VARCHAR(100) ,
+  Id   INT,
+  Name VARCHAR(100),
   PRIMARY KEY (Id)
 );
-
 
 
 CREATE TABLE IF NOT EXISTS ProjectsUsers (
@@ -43,13 +42,17 @@ CREATE TABLE IF NOT EXISTS RoomsUsers (
   FOREIGN KEY (userId) REFERENCES Users (Id)
 );
 
-CREATE TABLE IF NOT EXISTS UsersDates (
-  date   DATE NOT NULL,
-  userId INT  NOT NULL,
-  FOREIGN KEY (userId) REFERENCES Users (Id)
+CREATE TABLE IF NOT EXISTS Dates (
+  id   INT  NOT NULL,
+  date DATE NOT NULL,
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS Dates (
-  date DATE NOT NULL
+CREATE TABLE IF NOT EXISTS UsersDates (
+  dateId INT NOT NULL,
+  userId INT NOT NULL,
+  FOREIGN KEY (userId) REFERENCES Users (Id),
+  FOREIGN KEY (dateId) REFERENCES Users (Id)
 );
+
 

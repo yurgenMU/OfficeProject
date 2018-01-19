@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Rooms")
-public class Room extends AbstractEntity{
+public class Room extends AbstractEntity {
     private String name;
     private Set<User> users;
 
@@ -33,7 +33,8 @@ public class Room extends AbstractEntity{
     }
 
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "RoomsUsers", joinColumns = { @JoinColumn(name = "RoomId") }, inverseJoinColumns = { @JoinColumn(name = "UserId") })
     public Set<User> getUsers() {
         return users;
     }
@@ -42,7 +43,7 @@ public class Room extends AbstractEntity{
         this.users = users;
     }
 
-        @Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

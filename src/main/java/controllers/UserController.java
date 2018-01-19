@@ -22,26 +22,26 @@ public class UserController {
     @Qualifier(value = "userService")
     private void setUserService(UserService userService) {
         this.userService = userService;
-        System.out.println(userService.getAll());
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     private String listUsers(Model model) {
-        List<User> users = userService.getAll();
-        model.addAttribute("users", users);
+        List<User> usersData = userService.getAll();
+        model.addAttribute("users", usersData);
         return "listUser";
     }
 
     @RequestMapping(value = "users/add", method = RequestMethod.POST)
     private String addNew(@ModelAttribute("user") User user, Model model) {
+        user.setRole("ROLE_USER");
         userService.add(user);
         return "redirect:/";
 
     }
 
     @RequestMapping(value = "users/edit/{id}", method = RequestMethod.POST)
-    private String updateExisting(@ModelAttribute("user") User user) {
-        userService.add(user);
+    private String updateExisting(@ModelAttribute("user") User userInfo) {
+        userService.add(userInfo);
         return "redirect:/";
     }
 
@@ -52,8 +52,8 @@ public class UserController {
 
     @RequestMapping(value = "users/edit/{id}", method = RequestMethod.GET)
     private String getEditPage(Model model, @PathVariable("id") int userId) {
-        User user = (User) userService.get(userId);
-        model.addAttribute("user", user);
+        User userInfo = (User) userService.get(userId);
+        model.addAttribute("user", userInfo);
         return "update";
     }
 
@@ -62,5 +62,6 @@ public class UserController {
         userService.remove(userId);
         return "redirect:/";
     }
+
 }
 

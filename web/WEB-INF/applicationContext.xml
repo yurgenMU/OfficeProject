@@ -32,6 +32,10 @@
     <bean id="roomService" class="service.RoomService">
         <property name="roomDAO" ref="roomDAO"></property>
     </bean>
+    <bean id="dateDAO" class="DAO.DateEntityDAO"></bean>
+    <bean id="dateService" class="service.DateService">
+    <property name="dateEntityDAO" ref="dateDAO"></property>
+    </bean>
 
 
     <bean id="projectDAO" class="DAO.ProjectDAO"></bean>
