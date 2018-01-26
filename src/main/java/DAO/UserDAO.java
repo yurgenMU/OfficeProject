@@ -3,10 +3,12 @@ package DAO;
 import model.AbstractEntity;
 import model.Project;
 import model.User;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,10 +26,21 @@ public class UserDAO implements EntityDAO {
     @Override
     public <T extends AbstractEntity> void addEntity(T entity) {
         User userInfo = (User) entity;
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
             session.save(userInfo);
             transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            he.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
         }
 
     }
@@ -41,29 +54,41 @@ public class UserDAO implements EntityDAO {
     @Override
     public <T extends AbstractEntity> void editEntity(T entity) {
         User userInfo = (User) entity;
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            User modifiedUserInfo = session.get(User.class, userInfo.getId());
-            modifiedUserInfo.setFirstName(userInfo.getFirstName());
-            modifiedUserInfo.setLastName(userInfo.getLastName());
-            modifiedUserInfo.setLogin(userInfo.getLogin());
-            modifiedUserInfo.setRole(userInfo.getRole());
-            modifiedUserInfo.setPassword(userInfo.getPassword());
-            modifiedUserInfo.setEmail(userInfo.getEmail());
-            modifiedUserInfo.setProjects(userInfo.getProjects());
-            session.update(modifiedUserInfo);
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.merge(userInfo);
             transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null)
+                transaction.rollback();
+            he.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
         }
 
     }
 
     @Override
     public void removeEntity(int Id) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            User removedUserInfo = session.get(User.class, Id);
-            session.delete(removedUserInfo);
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            User removedUser = session.get(User.class, Id);
+            session.delete(removedUser);
             transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null)
+                transaction.rollback();
+            he.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
         }
     }
 
@@ -77,7 +102,7 @@ public class UserDAO implements EntityDAO {
         return usersData;
     }
 
-    public Set<Project> getProjects(int id){
+    public Set<Project> getProjects(int id) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Set<Project> projects = session.get(User.class, id).getProjects();
@@ -86,8 +111,10 @@ public class UserDAO implements EntityDAO {
         return projects;
     }
 
-    public User getUser(String login){
+    public User findByLogin(String userLogin) {
         Session session = sessionFactory.openSession();
-        return session.get(User.class, login);
+        Query query = session.createQuery("from User where login =:login");
+        query.setParameter("login", userLogin);
+        return (User) query.uniqueResult();
     }
 }

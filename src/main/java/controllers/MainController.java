@@ -18,16 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class MainController {
 
-    @RequestMapping(value = {"/", "/welcome**"}, method = RequestMethod.GET)
-    public String defaultPage() {
+//    @RequestMapping(value = {"/", "/welcome**"}, method = RequestMethod.GET)
+//    public String defaultPage() {
+//        return "main";
 //
-//        ModelAndView model = new ModelAndView();
-//        model.addObject("title", "Spring Security + Hibernate Example");
-//        model.addObject("message", "This is default page!");
-//        model.setViewName("hello");
-        return "main";
-
-    }
+//    }
 
     @RequestMapping(value = {"/showProjects/{id}"}, method = RequestMethod.GET)
     public String getProjectsByUser() {

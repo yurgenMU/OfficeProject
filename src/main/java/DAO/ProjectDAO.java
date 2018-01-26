@@ -2,6 +2,7 @@ package DAO;
 
 import model.AbstractEntity;
 import model.Project;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -22,10 +23,21 @@ public class ProjectDAO implements EntityDAO {
     @Override
     public <T extends AbstractEntity> void addEntity(T entity) {
         Project project = (Project) entity;
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
             session.save(project);
             transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null)
+                transaction.rollback();
+            he.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
@@ -38,24 +50,44 @@ public class ProjectDAO implements EntityDAO {
     @Override
     public <T extends AbstractEntity> void editEntity(T entity) {
         Project project = (Project) entity;
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            Project modifiedProject = session.get(Project.class, project.getId());
-            modifiedProject.setName(project.getName());
-            modifiedProject.setId(project.getId());
-            modifiedProject.setUsers(project.getUsers());
-            session.update(modifiedProject);
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.merge(project);
             transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            he.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     @Override
     public void removeEntity(int Id) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
             Project removedProject = session.get(Project.class, Id);
             session.delete(removedProject);
             transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            he.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 

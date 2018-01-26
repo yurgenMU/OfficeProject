@@ -1,12 +1,11 @@
 package controllers;
 
-import CalendarService.Month;
+import calendarService.Month;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import service.DateService;
 import service.UserService;
 
@@ -45,7 +44,7 @@ public class CalendarController {
         model.addAttribute("year", y);
         model.addAttribute("monthName", monthName);
         model.addAttribute("months", months);
-        return "calendar12";
+        return "/resources/pages/calendar12.html";
     }
 
 

@@ -18,7 +18,6 @@ public class Project extends AbstractEntity{
     }
 
     public void setUsers(Set<User> users) {
-//        users.stream().forEach(user -> user.getProjects().add(this));
         this.users = users;
     }
 

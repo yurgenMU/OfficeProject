@@ -33,8 +33,8 @@ public class Room extends AbstractEntity {
     }
 
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "RoomsUsers", joinColumns = { @JoinColumn(name = "RoomId") }, inverseJoinColumns = { @JoinColumn(name = "UserId") })
+    @OneToMany(mappedBy = "room")
+//    @JoinTable(name = "RoomsUsers", joinColumns = { @JoinColumn(name = "RoomId") }, inverseJoinColumns = { @JoinColumn(name = "UserId") })
     public Set<User> getUsers() {
         return users;
     }

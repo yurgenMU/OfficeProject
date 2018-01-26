@@ -1,9 +1,6 @@
 package model;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,6 +15,11 @@ public class User extends AbstractEntity {
     private Set<Project> projects;
     private Set<DateEntity> dates;
     private Room room;
+
+
+
+    private String confirmPassword;
+
 
 
     @Id
@@ -63,8 +65,8 @@ public class User extends AbstractEntity {
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(
             name = "UsersDates",
-            joinColumns = {@JoinColumn(name = "userId")},
-            inverseJoinColumns = {@JoinColumn(name = "dateId")}
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "date_id")}
     )
     public Set<DateEntity> getDates() {
         return dates;
@@ -75,7 +77,7 @@ public class User extends AbstractEntity {
     }
 
     @Basic
-    @Column(name = "FirstName", nullable = false, length = 100)
+    @Column(name = "first_name", nullable = false, length = 100)
     public String getFirstName() {
         return firstName;
     }
@@ -85,7 +87,7 @@ public class User extends AbstractEntity {
     }
 
     @Basic
-    @Column(name = "LastName", nullable = false, length = 100)
+    @Column(name = "last_name", nullable = false, length = 100)
     public String getLastName() {
         return lastName;
     }
@@ -108,8 +110,8 @@ public class User extends AbstractEntity {
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(
             name = "ProjectsUsers",
-            joinColumns = {@JoinColumn(name = "userId")},
-            inverseJoinColumns = {@JoinColumn(name = "projectId")}
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "project_id")}
     )
     public Set<Project> getProjects() {
         return projects;
@@ -127,15 +129,15 @@ public class User extends AbstractEntity {
                 "login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", first_name='" + firstName + '\'' +
+                ", last_name='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", room=" + room +
                 "} ";
     }
 
     @ManyToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name="roomId", nullable=true)
+    @JoinColumn(name="room_id", nullable=true)
     public Room getRoom() {
         return room;
     }
@@ -154,7 +156,6 @@ public class User extends AbstractEntity {
 
         if (id != user.id) return false;
         if (login != null ? !login.equals(user.login) : user.login != null) return false;
-//        if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (role != null ? !role.equals(user.role) : user.role != null) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
@@ -167,7 +168,6 @@ public class User extends AbstractEntity {
     public int hashCode() {
         int result = id;
         result = 31 * result + (login != null ? login.hashCode() : 0);
-//        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
@@ -175,4 +175,12 @@ public class User extends AbstractEntity {
         return result;
     }
 
+    @Transient
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
 }

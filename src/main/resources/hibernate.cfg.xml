@@ -10,9 +10,7 @@
         <property name="connection.password">112834</property>
         <mapping class="model.Project"/>
         <mapping class="model.Room"/>
-        <mapping class="model.Roomsusers"/>
         <mapping class="model.User"/>
-        <mapping class="model.Usersdates"/>
         <mapping class="model.DateEntity"/>
         <!-- <property name="connection.username"/> -->
         <!-- <property name="connection.password"/> -->

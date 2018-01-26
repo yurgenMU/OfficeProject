@@ -3,6 +3,7 @@ package DAO;
 import model.AbstractEntity;
 import model.DateEntity;
 import model.Room;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -20,10 +21,20 @@ public class DateEntityDAO implements EntityDAO {
     @Override
     public <T extends AbstractEntity> void addEntity(T entity) {
         DateEntity room = (DateEntity) entity;
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
             session.save(room);
             transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null)
+                transaction.rollback();
+            he.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
         }
     }
 
@@ -36,23 +47,41 @@ public class DateEntityDAO implements EntityDAO {
     @Override
     public <T extends AbstractEntity> void editEntity(T entity) {
         DateEntity dateEntity = (DateEntity) entity;
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            DateEntity dateEntity1 = session.get(DateEntity.class, dateEntity.getId());
-            dateEntity1.setId(dateEntity.getId());
-            dateEntity1.setDate(dateEntity.getDate());
-            dateEntity1.setUsers(dateEntity.getUsers());
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.merge(dateEntity);
             transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null)
+                transaction.rollback();
+            he.printStackTrace();
+        } finally {
+            if (session != null){
+                session.close();
+            }
         }
     }
 
     @Override
     public void removeEntity(int Id) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
             DateEntity dateEntity = session.get(DateEntity.class, Id);
             session.delete(dateEntity);
             transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null)
+                transaction.rollback();
+            he.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
         }
     }
 

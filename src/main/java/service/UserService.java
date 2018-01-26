@@ -4,16 +4,20 @@ import DAO.UserDAO;
 import model.AbstractEntity;
 import model.Project;
 import model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
 
 @Service
 public class UserService implements EntityService{
-//    private EntityDAO userDAO;
     private UserDAO userDAO;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
@@ -26,6 +30,9 @@ public class UserService implements EntityService{
     @Override
     @Transactional
     public void add(AbstractEntity entity) {
+        User user = (User) entity;
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setRole("ROLE_USER");
         userDAO.addEntity(entity);
     }
 
@@ -47,8 +54,11 @@ public class UserService implements EntityService{
         userDAO.removeEntity(id);
     }
 
+    public User findByLogin(String username) {
+        return userDAO.findByLogin(username);
+    }
 
-    @Transactional
+
     public Set<Project> getProjects(int id){
         return  userDAO.getProjects(id);
     }

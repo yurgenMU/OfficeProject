@@ -2,6 +2,7 @@ package DAO;
 
 import model.AbstractEntity;
 import model.Room;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -22,10 +23,22 @@ public class RoomDAO implements EntityDAO {
     @Override
     public <T extends AbstractEntity> void addEntity(T entity) {
         Room room = (Room) entity;
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
             session.save(room);
             transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            he.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
@@ -38,24 +51,44 @@ public class RoomDAO implements EntityDAO {
     @Override
     public <T extends AbstractEntity> void editEntity(T entity) {
         Room room = (Room) entity;
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            Room modifiedRoom = session.get(Room.class, room.getId());
-            modifiedRoom.setName(room.getName());
-            modifiedRoom.setId(room.getId());
-            modifiedRoom.setUsers(room.getUsers());
-            session.update(modifiedRoom);
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.merge(room);
             transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            he.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
+
         }
+
     }
 
     @Override
     public void removeEntity(int Id) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
             Room removedRoom = session.get(Room.class, Id);
             session.delete(removedRoom);
             transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            he.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
         }
     }
 

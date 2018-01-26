@@ -10,7 +10,7 @@
     <li><a href="/users"> All Users</a></li>
     <li><a href="/projects"> All Projects</a></li>
     <li><a href="/rooms"> All Rooms</a></li>
-    <li><a href="/calendar"> Calendar</a></li>
+    <li><a href="/calendar">Calendar</a></li>
   </ul>
 
   </body>
