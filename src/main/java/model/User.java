@@ -1,10 +1,13 @@
 package model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@DynamicUpdate
 @Table(name = "Users")
 public class User extends AbstractEntity {
     private String login;

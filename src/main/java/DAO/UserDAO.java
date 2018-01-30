@@ -63,7 +63,7 @@ public class UserDAO implements EntityDAO {
         try {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-            session.merge(userInfo);
+            session.update(userInfo);
             transaction.commit();
         } catch (HibernateException he) {
             if (transaction != null)

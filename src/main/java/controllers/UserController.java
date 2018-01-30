@@ -1,5 +1,6 @@
 package controllers;
 
+import model.Room;
 import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -118,8 +119,15 @@ public class UserController {
     }
 
     @RequestMapping(value = "OfficeProject/users/edit/{id}", method = RequestMethod.POST)
-    private String updateExisting(@ModelAttribute("user") User userInfo) {
-        userService.edit(userInfo);
+    private String updateExisting(@ModelAttribute("user") User userInfo, @ModelAttribute("room") Room room) {
+        User proxyUser = userService.get(userInfo.getId());
+        if(userInfo.getFirstName() != null)
+            proxyUser.setFirstName(userInfo.getFirstName());
+        if(userInfo.getLastName() != null)
+            proxyUser.setLastName(userInfo.getLastName());
+        if(userInfo.getRoom() != null)
+            proxyUser.setRoom(room);
+        userService.edit(proxyUser);
         return "redirect:/";
     }
 
@@ -130,9 +138,10 @@ public class UserController {
 
     @RequestMapping(value = "OfficeProject/users/edit/{id}", method = RequestMethod.GET)
     private String getEditPage(Model model, @PathVariable("id") int userId) {
-        User userInfo = (User) userService.get(userId);
+        User userInfo = userService.get(userId);
         model.addAttribute("user", userInfo);
-        return "update";
+        model.addAttribute("room", userInfo.getRoom());
+        return "editUser";
     }
 
     @RequestMapping(value = "OfficeProject/users/remove/{id}", method = RequestMethod.GET)
