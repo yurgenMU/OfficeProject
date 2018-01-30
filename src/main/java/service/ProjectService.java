@@ -4,7 +4,7 @@ import DAO.ProjectDAO;
 import model.AbstractEntity;
 import model.Project;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public class ProjectService implements EntityService{
@@ -23,8 +23,14 @@ public class ProjectService implements EntityService{
 
     @Override
     @Transactional
-    public AbstractEntity get(int id) {
+    public Project get(int id) {
         return projectDAO.getEntity(id);
+    }
+
+    @Override
+    @Transactional
+    public void edit(AbstractEntity entity) {
+        projectDAO.editEntity(entity);
     }
 
     @Override

@@ -3,6 +3,9 @@ package controllers;
 import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +18,7 @@ import service.UserService;
 import validator.UserValidator;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class UserController {
@@ -51,7 +55,7 @@ public class UserController {
 
         securityService.autoLogin(userForm.getLogin(), userForm.getConfirmPassword());
 
-        return "redirect:/welcome";
+        return "redirect:/OfficeProject";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -67,9 +71,20 @@ public class UserController {
         return "login";
     }
 
-    @RequestMapping(value = {"/", "/welcome"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/", "/OfficeProject"}, method = RequestMethod.GET)
     public String welcome(Model model) {
-        return "welcome";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Set<String> roles = AuthorityUtils
+                .authorityListToSet(authentication.getAuthorities());
+        org.springframework.security.core.userdetails.User modelUser =
+                (org.springframework.security.core.userdetails.User)authentication.getPrincipal();
+        String name = modelUser.getUsername();
+        User user = userService.findByLogin(name);
+        model.addAttribute("user", user);
+        if (roles.contains("ROLE_ADMIN")) {
+            return "welcomeAdmin";
+        }
+        return "welcomeUser";
     }
 
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
@@ -78,14 +93,23 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @RequestMapping(value = "OfficeProject/showAll", method = RequestMethod.GET)
     private String listUsers(Model model) {
         List<User> usersData = userService.getAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Set<String> roles = AuthorityUtils
+                .authorityListToSet(authentication.getAuthorities());
+        org.springframework.security.core.userdetails.User modelUser =
+                (org.springframework.security.core.userdetails.User)authentication.getPrincipal();
         model.addAttribute("users", usersData);
-        return "listUser";
+        if (roles.contains("ROLE_ADMIN")) {
+            return "listUser";
+        }
+        return "immutableUsersList";
+
     }
 
-    @RequestMapping(value = "users/add", method = RequestMethod.POST)
+    @RequestMapping(value = "OfficeProject/users/add", method = RequestMethod.POST)
     private String addNew(@ModelAttribute("user") User user, Model model) {
         user.setRole("ROLE_USER");
         userService.add(user);
@@ -93,9 +117,9 @@ public class UserController {
 
     }
 
-    @RequestMapping(value = "users/edit/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "OfficeProject/users/edit/{id}", method = RequestMethod.POST)
     private String updateExisting(@ModelAttribute("user") User userInfo) {
-        userService.add(userInfo);
+        userService.edit(userInfo);
         return "redirect:/";
     }
 
@@ -104,18 +128,19 @@ public class UserController {
         return "user";
     }
 
-    @RequestMapping(value = "users/edit/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "OfficeProject/users/edit/{id}", method = RequestMethod.GET)
     private String getEditPage(Model model, @PathVariable("id") int userId) {
         User userInfo = (User) userService.get(userId);
         model.addAttribute("user", userInfo);
         return "update";
     }
 
-    @RequestMapping(value = "users/remove/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "OfficeProject/users/remove/{id}", method = RequestMethod.GET)
     private String delete(@PathVariable("id") int userId){
         userService.remove(userId);
         return "redirect:/";
     }
+
 
 }
 

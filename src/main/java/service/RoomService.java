@@ -5,7 +5,7 @@ import model.AbstractEntity;
 import model.Room;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
@@ -24,8 +24,14 @@ public class RoomService implements EntityService{
 
     @Override
     @Transactional
-    public AbstractEntity get(int id) {
+    public Room get(int id) {
         return roomDAO.getEntity(id);
+    }
+
+    @Override
+    @Transactional
+    public void edit(AbstractEntity entity) {
+        roomDAO.editEntity(entity);
     }
 
     @Override

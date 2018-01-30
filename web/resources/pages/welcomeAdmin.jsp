@@ -27,17 +27,23 @@
 
         Welcome ${pageContext.request.userPrincipal.name} | <a onclick="document.forms['logoutForm'].submit()">Logout</a>
 
+        You logged in as administrator
 
     </c:if>
 
 </div>
+<a href="${contextPath}/edit/${user.id}">Edit Profile</a>
+${user.firstName} ${user.lastName}
+
+room ${user.room}
+
 
 
 <ul>
-    <li><a href="/users"> All Users</a></li>
-    <li><a href="/projects"> All Projects</a></li>
-    <li><a href="/rooms"> All Rooms</a></li>
-    <li><a href="/calendar">Calendar</a></li>
+    <li><a href="${contextPath}/OfficeProject/projects?userId=${user.id}">My projects</a></li>
+    <li><a href="${contextPath}/OfficeProject/dates?userId=${user.id}">My working days</a></li>
+    <li><a href="${contextPath}/OfficeProject/showAll"> All users</a></li>
+    <li><a href="${contextPath}/OfficeProject/calendar"> Calendar</a></li>
 </ul>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

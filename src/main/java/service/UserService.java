@@ -38,8 +38,14 @@ public class UserService implements EntityService{
 
     @Override
     @Transactional
-    public AbstractEntity get(int id) {
+    public User get(int id) {
         return userDAO.getEntity(id);
+    }
+
+    @Override
+    @Transactional
+    public void edit(AbstractEntity entity) {
+        userDAO.editEntity(entity);
     }
 
     @Override
@@ -59,7 +65,7 @@ public class UserService implements EntityService{
     }
 
 
-    public Set<Project> getProjects(int id){
-        return  userDAO.getProjects(id);
-    }
+//    public Set<Project> getProjects(int id){
+//        return  userDAO.getProjects(id);
+//    }
 }

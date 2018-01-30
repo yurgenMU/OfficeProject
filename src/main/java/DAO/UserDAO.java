@@ -1,6 +1,7 @@
 package DAO;
 
 import model.AbstractEntity;
+import model.DateEntity;
 import model.Project;
 import model.User;
 import org.hibernate.HibernateException;
@@ -11,6 +12,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
 
@@ -46,9 +48,11 @@ public class UserDAO implements EntityDAO {
     }
 
     @Override
-    public User getEntity(int Id) {
+    public User getEntity(int id) {
         Session session = sessionFactory.openSession();
-        return session.get(User.class, Id);
+        User user = session.get(User.class, id);
+        session.close();
+        return user;
     }
 
     @Override
@@ -103,12 +107,21 @@ public class UserDAO implements EntityDAO {
     }
 
     public Set<Project> getProjects(int id) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         Set<Project> projects = session.get(User.class, id).getProjects();
         transaction.commit();
         session.close();
         return projects;
+    }
+
+    public Set<DateEntity> getDates(int id) {
+        Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        Set<DateEntity> dates = session.get(User.class, id).getDates();
+        transaction.commit();
+        session.close();
+        return dates;
     }
 
     public User findByLogin(String userLogin) {

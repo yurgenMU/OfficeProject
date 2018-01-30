@@ -2,6 +2,7 @@ package model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -12,10 +13,13 @@ public class DateEntity extends AbstractEntity {
     @Temporal(TemporalType.DATE)
     private Date date;
 
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "dates")
+
+
+
+    @ManyToMany (fetch = FetchType.EAGER, mappedBy = "dates")
     public Set<User> getUsers() {
         return users;
     }
@@ -24,7 +28,7 @@ public class DateEntity extends AbstractEntity {
         this.users = users;
     }
 
-    @Id
+    @Id@GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;

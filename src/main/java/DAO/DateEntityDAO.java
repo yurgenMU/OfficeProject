@@ -8,7 +8,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
+import java.sql.Date;
 import java.util.List;
 
 public class DateEntityDAO implements EntityDAO {
@@ -20,14 +22,16 @@ public class DateEntityDAO implements EntityDAO {
 
     @Override
     public <T extends AbstractEntity> void addEntity(T entity) {
-        DateEntity room = (DateEntity) entity;
+        DateEntity date = (DateEntity) entity;
         Session session = null;
         Transaction transaction = null;
         try {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-            session.save(room);
-            transaction.commit();
+            if (findByDate(date.getDate()) == null) {
+                session.saveOrUpdate(date);
+                transaction.commit();
+            }
         } catch (HibernateException he) {
             if (transaction != null)
                 transaction.rollback();
@@ -59,7 +63,7 @@ public class DateEntityDAO implements EntityDAO {
                 transaction.rollback();
             he.printStackTrace();
         } finally {
-            if (session != null){
+            if (session != null) {
                 session.close();
             }
         }
@@ -89,10 +93,17 @@ public class DateEntityDAO implements EntityDAO {
     public List<DateEntity> getAllEntities() {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        List<DateEntity> dateEntitiess = session.createQuery("FROM DateEntity ").list();
+        List<DateEntity> dateEntities = session.createQuery("FROM DateEntity ").list();
         transaction.commit();
         session.close();
-        return dateEntitiess;
+        return dateEntities;
+    }
+
+    public DateEntity findByDate(Date nDate) {
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery("from DateEntity where date =:date");
+        query.setParameter("date", nDate);
+        return (DateEntity) query.uniqueResult();
     }
 
 }

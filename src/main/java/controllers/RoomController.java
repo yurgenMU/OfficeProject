@@ -24,39 +24,39 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-    @RequestMapping(value = "/rooms", method = RequestMethod.GET)
+    @RequestMapping(value = "OfficeProject/rooms", method = RequestMethod.GET)
     private String listUsers(Model model) {
         List<Room> rooms = roomService.getAll();
         model.addAttribute("rooms", rooms);
         return "listRoom";
     }
 
-    @RequestMapping(value = "rooms/add", method = RequestMethod.POST)
+    @RequestMapping(value = "OfficeProject/rooms/add", method = RequestMethod.POST)
     private String addNew(@ModelAttribute("room") Room room, Model model) {
         roomService.add(room);
         return "redirect:/";
 
     }
 
-    @RequestMapping(value = "rooms/edit/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "OfficeProject/rooms/edit/{id}", method = RequestMethod.POST)
     private String updateExisting(@ModelAttribute("room") Room room) {
         roomService.add(room);
         return "redirect:/";
     }
 
-    @RequestMapping(value = "rooms/add", method = RequestMethod.GET)
+    @RequestMapping(value = "OfficeProject/rooms/add", method = RequestMethod.GET)
     private String getAddPage() {
         return "room";
     }
 
-    @RequestMapping(value = "rooms/edit/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "OfficeProject/rooms/edit/{id}", method = RequestMethod.GET)
     private String getEditPage(Model model, @PathVariable("id") int roomId) {
         Room room = (Room) roomService.get(roomId);
         model.addAttribute("room", room);
         return "update";
     }
 
-    @RequestMapping(value = "rooms/remove/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "OfficeProject/rooms/remove/{id}", method = RequestMethod.GET)
     private String delete(@PathVariable("id") int Id){
         roomService.remove(Id);
         return "redirect:/";

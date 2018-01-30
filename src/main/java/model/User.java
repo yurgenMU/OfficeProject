@@ -1,6 +1,7 @@
 package model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -12,8 +13,8 @@ public class User extends AbstractEntity {
     private String firstName;
     private String lastName;
     private String email;
-    private Set<Project> projects;
-    private Set<DateEntity> dates;
+    private Set<Project> projects = new HashSet<>();
+    private Set<DateEntity> dates = new HashSet<>();
     private Room room;
 
 
@@ -23,6 +24,7 @@ public class User extends AbstractEntity {
 
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "Id", nullable = false)
     public int getId() {
         return id;
@@ -62,9 +64,9 @@ public class User extends AbstractEntity {
         this.role = role;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinTable(
-            name = "UsersDates",
+            name = "users_dates",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "date_id")}
     )
@@ -107,9 +109,9 @@ public class User extends AbstractEntity {
     }
 
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinTable(
-            name = "ProjectsUsers",
+            name = "projects_users",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")}
     )

@@ -9,10 +9,11 @@
 
     <http auto-config="true">
         <intercept-url pattern="/" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
-        <intercept-url pattern="/welcome" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
+        <intercept-url pattern="/OfficeProject" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
         <intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/dates" access="hasRole('ROLE_ADMIN')"/>
 
-        <form-login login-page="/login" default-target-url="/welcome" authentication-failure-url="/login?error"
+        <form-login login-page="/login" default-target-url="/OfficeProject" authentication-failure-url="/login?error"
                     username-parameter="username" password-parameter="password"/>
 
         <logout logout-success-url="/login?logout"/>

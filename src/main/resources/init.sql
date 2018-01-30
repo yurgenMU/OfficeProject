@@ -5,20 +5,22 @@ CREATE TABLE IF NOT EXISTS Rooms (
   id   INT          NOT NULL,
   name VARCHAR(100) NOT NULL,
   PRIMARY KEY (Id)
-);
+)
+  ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Users (
-  id        INT          NOT NULL AUTO_INCREMENT,
-  login     VARCHAR(100) NOT NULL UNIQUE,
-  password  VARCHAR(100) NOT NULL,
-  role      VARCHAR(45)  NOT NULL,
+  id         INT          NOT NULL AUTO_INCREMENT,
+  login      VARCHAR(100) NOT NULL UNIQUE,
+  password   VARCHAR(100) NOT NULL,
+  role       VARCHAR(45)  NOT NULL,
   first_name VARCHAR(100) NOT NULL,
   last_name  VARCHAR(100) NOT NULL,
-  email     VARCHAR(100) NOT NULL,
+  email      VARCHAR(100) NOT NULL,
   room_id    INT,
   PRIMARY KEY (Id),
   FOREIGN KEY (room_Id) REFERENCES Rooms (Id)
-);
+)
+  ENGINE = InnoDB;
 
 # CREATE TABLE roles (
 #   id   INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -38,45 +40,39 @@ CREATE TABLE IF NOT EXISTS Users (
 # );
 
 
-
-
 CREATE TABLE IF NOT EXISTS Projects (
-  id   INT NOT NULL ,
+  id   INT          NOT NULL,
   name VARCHAR(100) NOT NULL,
   PRIMARY KEY (Id)
-);
+)
+  ENGINE = InnoDB;
 
 
-CREATE TABLE IF NOT EXISTS ProjectsUsers (
+CREATE TABLE IF NOT EXISTS projects_users (
   project_id INT NOT NULL,
   user_id    INT NOT NULL,
   FOREIGN KEY (project_id) REFERENCES Projects (Id),
   FOREIGN KEY (user_id) REFERENCES Users (Id)
-);
-
-# CREATE TABLE IF NOT EXISTS RoomsUsers (
-#   room_id INT NOT NULL,
-#   user_id INT NOT NULL,
-#   FOREIGN KEY (room_id) REFERENCES Rooms (Id),
-#   FOREIGN KEY (user_id) REFERENCES Users (Id)
-# );
+)
+  ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Dates (
   id   INT  NOT NULL AUTO_INCREMENT,
-  date DATE NOT NULL,
+  date DATE NOT NULL UNIQUE ,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS UsersDates (
+CREATE TABLE IF NOT EXISTS users_dates (
   date_id INT NOT NULL,
   user_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES Users (id),
+
+
+  PRIMARY KEY (`date_id`, `user_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   FOREIGN KEY (date_id) REFERENCES Dates (id)
-);
+)
+  ENGINE = InnoDB;
 
-
-# INSERT INTO roles VALUES (1, 'ROLE_USER');
-# INSERT INTO roles VALUES (2, 'ROLE_ADMIN');
-#
-# INSERT INTO user_roles VALUES (1, 2);
-INSERT INTO Users VALUES (0, 'Admin')
+INSERT INTO Users VALUES (0, 'administrator', '$2a$11$pcMQeOxvn7Scj3lt00B84.CYRvnxpVSL/JpvPdG9jKLJIFmsNARDO',
+                          'ROLE_ADMIN', 'admin', 'admin', 'admin@admin.com', NULL);

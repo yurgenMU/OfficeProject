@@ -4,7 +4,9 @@ import DAO.DateEntityDAO;
 import model.AbstractEntity;
 import model.DateEntity;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Date;
 import java.util.List;
 
 public class DateService implements EntityService {
@@ -26,8 +28,14 @@ public class DateService implements EntityService {
 
     @Override
     @Transactional
-    public AbstractEntity get(int id) {
+    public DateEntity get(int id) {
         return dateEntityDAO.getEntity(id);
+    }
+
+    @Override
+    @Transactional
+    public void edit(AbstractEntity entity) {
+        dateEntityDAO.editEntity(entity);
     }
 
     @Override
@@ -40,5 +48,10 @@ public class DateService implements EntityService {
     @Transactional
     public void remove(int id) {
         dateEntityDAO.removeEntity(id);
+    }
+
+    @Transactional
+    public DateEntity findByDate(Date date){
+        return dateEntityDAO.findByDate(date);
     }
 }

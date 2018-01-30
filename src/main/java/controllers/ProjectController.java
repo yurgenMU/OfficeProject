@@ -32,51 +32,61 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @RequestMapping(value = "/projects", method = RequestMethod.GET)
-    private String listUsers(Model model) {
+    @RequestMapping(value = "OfficeProject/allProjects", method = RequestMethod.GET)
+    private String listProjects(Model model) {
         List<Project> myProjects = projectService.getAll();
 
         model.addAttribute("myProjects", myProjects);
         return "listProject";
     }
 
-    @RequestMapping(value = "projects/add", method = RequestMethod.POST)
+    @RequestMapping(value = "OfficeProject/projects/add", method = RequestMethod.POST)
     private String addNew(@ModelAttribute("mproject") Project mproject,
                           Model model,
-                          @RequestParam("selected")List<Integer> selectedUsers) {
+                          @RequestParam("selected") List<Integer> selectedUsers) {
         projectService.add(mproject);
 //        String[] selectedStudentIds = model.request.getParameterValues("selected");
         return "projects";
 
     }
 
-    @RequestMapping(value = "projects/edit/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "OfficeProject/projects",params = {"userId"},  method = RequestMethod.GET)
+    private String getProjectsByUser(Model model, @RequestParam("userId") int id) {
+        User user = userService.get(id);
+        Set<Project> projects = user.getProjects();
+        model.addAttribute("user", user);
+        model.addAttribute("myProjects", projects);
+        return "userProject";
+
+    }
+
+    @RequestMapping(value = "OfficeProject/projects/edit/{id}", method = RequestMethod.POST)
     private String updateExisting(@ModelAttribute("mproject") Project mproject) {
         projectService.add(mproject);
         return "projects";
     }
 
-    @RequestMapping(value = "projects/add", method = RequestMethod.GET)
+    @RequestMapping(value = "OfficeProject/projects/add", method = RequestMethod.GET)
     private String getAddPage(Model model) {
         List<User> users = userService.getAll();
         model.addAttribute(users);
         return "newProject";
     }
 
-    @RequestMapping(value = "projects/edit/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "OfficeProject/projects/edit/{id}", method = RequestMethod.GET)
     private String getEditPage(Model model, @PathVariable("id") int id) {
         Project project = (Project) projectService.get(id);
         model.addAttribute("project", project);
         return "update";
     }
 
-    @RequestMapping(value = "projects/remove/{id}", method = RequestMethod.GET)
-    private String delete(@PathVariable("id") int Id){
+    @RequestMapping(value = "OfficeProject/projects/remove/{id}", method = RequestMethod.GET)
+    private String delete(@PathVariable("id") int Id) {
         projectService.remove(Id);
         return "redirect:/";
     }
 
-    @RequestMapping(value = "usersByProject/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "OfficeProject/usersByProject/{id}", method = RequestMethod.GET)
     private String getUsers(Model model, @PathVariable("id") int id) {
         Project mproject = (Project) projectService.get(id);
         Set<User> users = mproject.getUsers();
