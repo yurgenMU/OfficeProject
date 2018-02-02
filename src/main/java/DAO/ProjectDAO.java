@@ -44,7 +44,9 @@ public class ProjectDAO implements EntityDAO {
     @Override
     public Project getEntity(int Id) {
         Session session = sessionFactory.openSession();
-        return session.get(Project.class, Id);
+        Project project = session.get(Project.class, Id);
+        session.close();
+        return project;
     }
 
     @Override

@@ -25,28 +25,27 @@
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
 
-        Welcome ${pageContext.request.userPrincipal.name} | <a onclick="document.forms['logoutForm'].submit()">Logout</a>
-
+        Welcome ${pageContext.request.userPrincipal.name} | <a
+            onclick="document.forms['logoutForm'].submit()">Logout</a>
 
 
     </c:if>
 
 </div>
 <a href="${contextPath}OfficeProject/users/edit/${user.id}">Edit Profile</a>
-    ${user.firstName} ${user.lastName}
+${user.firstName} ${user.lastName}
 
-    room ${user.room}
+room ${user.room}
 
 
 
-<ul>
-    <li><a href="${contextPath}/OfficeProject/projects?userId=${user.id}"> Projects</a></li>
-    <li><a href="${contextPath}/OfficeProject/dates?userId=${user.id}"> Working days</a></li>
-    <li><a href="${contextPath}/OfficeProject/showAll"> All users</a></li>
-    <li><a href="${contextPath}/OfficeProject/calendar"> Calendar</a></li>
-</ul>
+    <ul>
+        <li><a href="${contextPath}/OfficeProject/projects?userId=${user.id}"> Projects</a></li>
+        <li><a href="${contextPath}/OfficeProject/dates?userId=${user.id}"> Working days</a></li>
+        <li><a href="${contextPath}/OfficeProject/showAll"> All users</a></li>
+    </ul>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="${contextPath}/resources/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="${contextPath}/resources/js/bootstrap.min.js"></script>
 </body>
 </html>

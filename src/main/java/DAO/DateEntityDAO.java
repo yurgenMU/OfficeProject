@@ -45,7 +45,9 @@ public class DateEntityDAO implements EntityDAO {
     @Override
     public DateEntity getEntity(int Id) {
         Session session = sessionFactory.openSession();
-        return session.get(DateEntity.class, Id);
+        DateEntity dateEntity = session.get(DateEntity.class, Id);
+        session.close();
+        return dateEntity;
     }
 
     @Override
@@ -103,7 +105,9 @@ public class DateEntityDAO implements EntityDAO {
         Session session = sessionFactory.openSession();
         Query query = session.createQuery("from DateEntity where date =:date");
         query.setParameter("date", nDate);
-        return (DateEntity) query.uniqueResult();
+        DateEntity ans = (DateEntity) query.uniqueResult();
+        session.close();
+        return ans;
     }
 
 }

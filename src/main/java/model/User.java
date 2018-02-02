@@ -21,7 +21,7 @@ public class User extends AbstractEntity {
     private Room room;
 
 
-
+    @Transient
     private String confirmPassword;
 
 

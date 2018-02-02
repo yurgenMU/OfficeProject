@@ -25,7 +25,6 @@
 
 
     <bean id="userDAO" class="DAO.UserDAO"></bean>
-    <!--TODO: try to set sessionFactory here instead of setting in class-->
     <bean id="userService" class="service.UserService">
         <property name="userDAO" ref="userDAO"></property>
     </bean>
@@ -47,6 +46,7 @@
     <bean id="securityService" class="service.SecurityServiceImpl">
     </bean>
     <bean id="userValidator" class="validator.UserValidator"></bean>
+    <bean id="updateValidator" class="validator.UpdateValidator"></bean>
     <context:component-scan base-package="controllers"/>
 
 </beans>

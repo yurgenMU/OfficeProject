@@ -43,7 +43,7 @@ public class ProjectController {
     @RequestMapping(value = "OfficeProject/projects/add", method = RequestMethod.POST)
     private String addNew(@ModelAttribute("mproject") Project mproject,
                           Model model,
-                          @RequestParam("selected") List<Integer> selectedUsers) {
+                          @RequestParam("users") List<Integer> selectedUsers) {
         projectService.add(mproject);
 //        String[] selectedStudentIds = model.request.getParameterValues("selected");
         return "projects";
@@ -69,7 +69,7 @@ public class ProjectController {
     @RequestMapping(value = "OfficeProject/projects/add", method = RequestMethod.GET)
     private String getAddPage(Model model) {
         List<User> users = userService.getAll();
-        model.addAttribute(users);
+        model.addAttribute("users", users);
         return "newProject";
     }
 

@@ -43,9 +43,8 @@
         </c:forEach>
         </tbody>
     </table>
-    <%--<p>Date: <input type="text" id="datepicker"></p>--%>
 
-    <form method="POST" action="dates" name="frmAddDate">
+    <form method="POST" action="dates?userId=${user.id}" name="frmAddDate">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <input type="hidden" name="userId" value="${user.id}"/>
         Date : <input
@@ -53,6 +52,7 @@
             id="datepicker"> <br/>
         <input
             type="submit" value="Add new date"/>
+        <a href="/OfficeProject" class="btn btn-info" role="button">Main page</a>
     </form>
     <%--<a href="projects/add" class="btn btn-info" role="button">Add new</a>--%>
 

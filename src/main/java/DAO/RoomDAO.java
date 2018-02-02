@@ -45,7 +45,9 @@ public class RoomDAO implements EntityDAO {
     @Override
     public Room getEntity(int Id) {
         Session session = sessionFactory.openSession();
-        return session.get(Room.class, Id);
+        Room room = session.get(Room.class, Id);
+        session.close();
+        return room;
     }
 
     @Override

@@ -72,10 +72,12 @@ public class CalendarController {
         Set<DateEntity> dates = user.getDates();
         DateEntity dateEntity = new DateEntity();
         java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-        if (dateService.findByDate(sqlDate) == null){
+        DateEntity existing = dateService.findByDate(sqlDate);
+
+        if (existing == null){
             dateEntity.setDate(sqlDate);
         } else
-            dateEntity = dateService.findByDate(sqlDate);
+            dateEntity = existing;
         dates.add(dateEntity);
         user.setDates(dates);
         userService.edit(user);

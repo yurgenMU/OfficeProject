@@ -45,7 +45,28 @@ public class UserService implements EntityService{
     @Override
     @Transactional
     public void edit(AbstractEntity entity) {
-        userDAO.editEntity(entity);
+        User userInfo = (User) entity;
+        User proxyUser = userDAO.getEntity(userInfo.getId());
+        if(userInfo.getFirstName() != null)
+            proxyUser.setFirstName(userInfo.getFirstName());
+        if(userInfo.getLastName() != null)
+            proxyUser.setLastName(userInfo.getLastName());
+        if(userInfo.getRoom() != null)
+            proxyUser.setRoom(userInfo.getRoom());
+        if(userInfo.getLogin() != null)
+            proxyUser.setLogin(userInfo.getLogin());
+        if(!userInfo.getPassword().equals(proxyUser.getPassword())){
+            if(userInfo.getPassword() != null)
+                proxyUser.setPassword(bCryptPasswordEncoder.encode(userInfo.getPassword()));
+        }
+        if(userInfo.getDates() != null)
+            if(userInfo.getDates().size() != 0){
+                proxyUser.setDates(userInfo.getDates());
+            }
+
+        if(userInfo.getProjects() != null)
+            proxyUser.setProjects(userInfo.getProjects());
+        userDAO.editEntity(proxyUser);
     }
 
     @Override
@@ -63,6 +84,9 @@ public class UserService implements EntityService{
     public User findByLogin(String username) {
         return userDAO.findByLogin(username);
     }
+
+
+//    public void editProjects
 
 
 //    public Set<Project> getProjects(int id){

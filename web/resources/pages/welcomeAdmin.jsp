@@ -37,13 +37,21 @@ ${user.firstName} ${user.lastName}
 
 room ${user.room}
 
+Administrator menu
+<ul>
+    <li><a href="${contextPath}/OfficeProject/showAll">All users</a></li>
+    <li><a href="${contextPath}/OfficeProject/projects/all">Projects</a></li>
+    <li><a href="${contextPath}/OfficeProject/rooms/all">Rooms</a></li>
+    <li><a href="${contextPath}/OfficeProject/dates/all">Dates</a></li>
+
+</ul>
 
 
+
+My menu
 <ul>
     <li><a href="${contextPath}/OfficeProject/projects?userId=${user.id}">My projects</a></li>
     <li><a href="${contextPath}/OfficeProject/dates?userId=${user.id}">My working days</a></li>
-    <li><a href="${contextPath}/OfficeProject/showAll"> All users</a></li>
-    <li><a href="${contextPath}/OfficeProject/calendar"> Calendar</a></li>
 </ul>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
