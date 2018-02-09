@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 
 @Component
-public class UserValidator implements Validator {
+public class CreateUserValidator implements Validator {
 
     @Autowired
     private UserService userService;
@@ -28,17 +28,24 @@ public class UserValidator implements Validator {
         User user = (User) o;
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "login", "Required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "Required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "Required");
         if (user.getLogin().length() < 8 || user.getLogin().length() > 32) {
             errors.rejectValue("login", "Size.user.login");
         }
-
-        if ((userService.findByLogin(user.getLogin()) != null) &&
-                ((userService.findByLogin(user.getLogin()).getId() != user.getId()))) {
+        if (user.getFirstName().trim().length() == 0){
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "Required");
+        }
+        if (user.getLastName().trim().length() == 0){
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "Required");
+        }
+        if ((userService.getByName(user.getLogin()) != null) &&
+                ((userService.getByName(user.getLogin()).getId() != user.getId()))) {
             errors.rejectValue("login", "Duplicate.user.login");
         }
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "Required");
-        if (user.getPassword().length() < 8 || user.getPassword().length() > 32) {
+        if (user.getPassword().trim().length() < 8 || user.getPassword().trim().length() > 32) {
             errors.rejectValue("password", "Size.user.password");
         }
 

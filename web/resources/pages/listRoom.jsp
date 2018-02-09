@@ -10,7 +10,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-    <title>Show All Rooms</title>
+    <title>Show All Projects</title>
 </head>
 <body>
 
@@ -18,22 +18,18 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Room Id</th>
-            <th>Name</th>
+            <th>Rooms</th>
         </tr>
         </thead>
         <tbody>
         <c:forEach items="${rooms}" var="room">
             <tr>
-                <td>${room.id}</td>
-                <td>${room.name}</td>
+                <td><a href="${contextPath}/OfficeProject/rooms/edit?roomId=${room.id}">${room.name}</a></td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
-    <a href="rooms/add" class="btn btn-info" role="button">Add Room</a>
-    <%--<button type="button" href="/add">Add UserData</button>--%>
-    <%--<p><a href=/add>Add UserData</a></p>--%>
+    <a href="${contextPath}/OfficeProject/rooms/add" class="btn btn-info" role="button">Add new</a>
 </div>
 </body>
 </html>

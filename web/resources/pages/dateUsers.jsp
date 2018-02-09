@@ -10,7 +10,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-    <title>Show All Projects</title>
+    <title>Users in selected day</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -29,30 +29,30 @@
 
 
 <div class="container-fluid">
+
+
+
+
+    <form method="GET" action="users?adate=${datepicker}" name="frmAddDate">
+        <h1>Users who were in office in ${showDate}</h1>
+        Date : <input
+            type="text" name="adate"
+            id="datepicker" value="asd"> <br/>
+        <input
+                type="submit" value="Show users"/>
+        <a href="/" class="btn btn-info" role="button">to main page</a>
+
     <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Days when ${user.firstName} ${user.lastName} was in office</th>
-        </tr>
-        </thead>
+
         <tbody>
-        <c:forEach items="${myDates}" var="mydate">
+        <c:forEach var="user" items="${users}">
             <tr>
-                <td>${mydate.date}</td>
+                <td>${user.firstName} ${user.lastName}</td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
-
-    <form method="POST" action="/OfficeProject/dates?userId=${user.id}" name="frmAddDate">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        <input type="hidden" name="userId" value="${user.id}"/>
-        Date : <input
-            type="text" name="duedate"
-            id="datepicker"> <br/>
-        <input
-            type="submit" value="Add new date"/>
-        <a href="/OfficeProject" class="btn btn-info" role="button">Main page</a>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
 
 </div>

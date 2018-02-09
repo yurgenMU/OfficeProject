@@ -5,15 +5,19 @@ import model.AbstractEntity;
 import model.Project;
 import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 @Service
-public class UserService implements EntityService{
+public class UserService implements EntityService {
     private UserDAO userDAO;
 
     @Autowired
@@ -42,29 +46,30 @@ public class UserService implements EntityService{
         return userDAO.getEntity(id);
     }
 
+
     @Override
     @Transactional
     public void edit(AbstractEntity entity) {
         User userInfo = (User) entity;
         User proxyUser = userDAO.getEntity(userInfo.getId());
-        if(userInfo.getFirstName() != null)
+        if (userInfo.getFirstName() != null)
             proxyUser.setFirstName(userInfo.getFirstName());
-        if(userInfo.getLastName() != null)
+        if (userInfo.getLastName() != null)
             proxyUser.setLastName(userInfo.getLastName());
-        if(userInfo.getRoom() != null)
+        if (userInfo.getRoom() != null)
             proxyUser.setRoom(userInfo.getRoom());
-        if(userInfo.getLogin() != null)
+        if (userInfo.getLogin() != null)
             proxyUser.setLogin(userInfo.getLogin());
-        if(!userInfo.getPassword().equals(proxyUser.getPassword())){
-            if(userInfo.getPassword() != null)
+        if (!userInfo.getPassword().equals(proxyUser.getPassword())) {
+            if (userInfo.getPassword() != null)
                 proxyUser.setPassword(bCryptPasswordEncoder.encode(userInfo.getPassword()));
         }
-        if(userInfo.getDates() != null)
-            if(userInfo.getDates().size() != 0){
+        if (userInfo.getDates() != null)
+            if (userInfo.getDates().size() != 0) {
                 proxyUser.setDates(userInfo.getDates());
             }
 
-        if(userInfo.getProjects() != null)
+        if (userInfo.getProjects() != null)
             proxyUser.setProjects(userInfo.getProjects());
         userDAO.editEntity(proxyUser);
     }
@@ -78,18 +83,30 @@ public class UserService implements EntityService{
     @Override
     @Transactional
     public void remove(int id) {
+        User user = get(id);
+        user.setRoom(null);
+        user.setProjects(null);
+        user.setDates(null);
+        userDAO.editEntity(user);
         userDAO.removeEntity(id);
     }
 
-    public User findByLogin(String username) {
-        return userDAO.findByLogin(username);
+
+    @Override
+    public User getByName(String username) {
+        return userDAO.getEntityByName(username);
     }
 
 
-//    public void editProjects
+    public void removeRoom(int userId){
+        User user = get(userId);
+        user.setRoom(null);
+        userDAO.editEntity(user);
+    }
 
 
-//    public Set<Project> getProjects(int id){
-//        return  userDAO.getProjects(id);
-//    }
+    public boolean isActual(int id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return id == getByName(userDetails.getUsername()).getId();
+    }
 }

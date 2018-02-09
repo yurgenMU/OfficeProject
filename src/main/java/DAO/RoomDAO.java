@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -43,6 +44,14 @@ public class RoomDAO implements EntityDAO {
     }
 
     @Override
+    public Room getEntityByName(String RoomName) {
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery("from Room where name =:name");
+        query.setParameter("name", RoomName);
+        return (Room) query.uniqueResult();
+    }
+
+    @Override
     public Room getEntity(int Id) {
         Session session = sessionFactory.openSession();
         Room room = session.get(Room.class, Id);
@@ -58,7 +67,7 @@ public class RoomDAO implements EntityDAO {
         try {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-            session.merge(room);
+            session.update(room);
             transaction.commit();
         } catch (HibernateException he) {
             if (transaction != null) {

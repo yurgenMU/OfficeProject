@@ -18,25 +18,18 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <%--<th>Project Id</th>--%>
             <th>Project name</th>
-            <%--<th>Users</th>--%>
         </tr>
         </thead>
         <tbody>
         <c:forEach items="${myProjects}" var="mproject">
             <tr>
-                <%--<td>${mproject.id}</td>--%>
-                <%--<td>${mproject.name}</td>--%>
-                <td><a href="usersByProject/${mproject.id}">${mproject.name}</a></td>
-                <%--<td>${mproject.users}</td>--%>
+                <td><a href="${contextPath}/OfficeProject/projects/edit?projectId=${mproject.id}">${mproject.name}</a></td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
-    <a href="projects/add" class="btn btn-info" role="button">Add new</a>
-    <%--<button type="button" href="/add">Add UserInfo</button>--%>
-    <%--<p><a href=/add>Add UserInfo</a></p>--%>
+    <a href="${contextPath}/OfficeProject/projects/add" class="btn btn-info" role="button">Add new</a>
 </div>
 </body>
 </html>

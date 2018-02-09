@@ -11,14 +11,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import service.SecurityService;
 import service.UserService;
-import validator.UpdateValidator;
-import validator.UserValidator;
+import validator.UpdateUserValidator;
+import validator.CreateUserValidator;
 
 import java.util.List;
 import java.util.Set;
@@ -31,10 +28,10 @@ public class UserController {
     private SecurityService securityService;
 
     @Autowired
-    private UserValidator userValidator;
+    private CreateUserValidator createUserValidator;
 
     @Autowired
-    private UpdateValidator updateValidator;
+    private UpdateUserValidator updateUserValidator;
 
     @Autowired
     @Qualifier(value = "userService")
@@ -51,8 +48,7 @@ public class UserController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String registration(@ModelAttribute("user") User userForm, BindingResult bindingResult, Model model) {
-        userValidator.validate(userForm, bindingResult);
-
+        createUserValidator.validate(userForm, bindingResult);
         if (bindingResult.hasErrors()) {
             return "registration";
         }
@@ -85,8 +81,9 @@ public class UserController {
         org.springframework.security.core.userdetails.User modelUser =
                 (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
         String name = modelUser.getUsername();
-        User user = userService.findByLogin(name);
+        User user = userService.getByName(name);
         model.addAttribute("user", user);
+        model.addAttribute("room", user.getRoom());
         if (roles.contains("ROLE_ADMIN")) {
             return "welcomeAdmin";
         }
@@ -109,7 +106,7 @@ public class UserController {
                 (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
         model.addAttribute("users", usersData);
         if (roles.contains("ROLE_ADMIN")) {
-            return "listUser";
+            return "usersList";
         }
         return "immutableUsersList";
 
@@ -123,17 +120,18 @@ public class UserController {
 
     }
 
-    @RequestMapping(value = "OfficeProject/users/edit/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "OfficeProject/users/edit", method = RequestMethod.POST)
     private String updateExisting(@ModelAttribute("user") User userInfo, BindingResult bindingResult,
-                                  @ModelAttribute("room") Room room, Model model) {
-        updateValidator.validate(userInfo, bindingResult);
+                                  @ModelAttribute("room") Room room, Model model,@RequestParam("userId") int userId) {
+        userInfo.setId(userId);
+        updateUserValidator.validate(userInfo, bindingResult);
 
         if (bindingResult.hasErrors()) {
+            userInfo.setPassword(null);
+            userInfo.setConfirmPassword(null);
             return "editUser";
         }
-        User proxyUser = userService.get(userInfo.getId());
-        if (isActual(userInfo.getId())) {
-
+        if (userService.isActual(userId)) {
             userService.edit(userInfo);
             return "redirect:/";
         }
@@ -147,12 +145,12 @@ public class UserController {
         return "user";
     }
 
-    @RequestMapping(value = "OfficeProject/users/edit/{id}", method = RequestMethod.GET)
-    private String getEditPage(Model model, @PathVariable("id") int userId) {
+    @RequestMapping(value = "OfficeProject/users/edit", method = RequestMethod.GET)
+    private String getEditPage(Model model, @RequestParam("userId") int userId) {
         User userInfo = userService.get(userId);
         userInfo.setPassword(null);
         userInfo.setConfirmPassword(null);
-        if (isActual(userInfo.getId())) {
+        if (userService.isActual(userInfo.getId())) {
             model.addAttribute("user", userInfo);
             model.addAttribute("room", userInfo.getRoom());
             return "editUser";
@@ -160,17 +158,23 @@ public class UserController {
         return "error";
     }
 
-    @RequestMapping(value = "OfficeProject/users/remove/{id}", method = RequestMethod.GET)
-    private String delete(@PathVariable("id") int userId) {
+    @RequestMapping(value = "OfficeProject/users/remove", method = RequestMethod.GET)
+    private String delete(@RequestParam("userId") int userId) {
         userService.remove(userId);
         return "redirect:/";
     }
 
 
-    private boolean isActual(int id) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return id == userService.findByLogin(userDetails.getUsername()).getId();
+    @RequestMapping(value = "OfficeProject/projects",method = RequestMethod.GET)
+    private String getProjectsByUser(@RequestParam("userId") int userId, Model model){
+        User user = userService.get(userId);
+        model.addAttribute("user", user);
+        model.addAttribute("myProjects", user.getProjects());
+        return "userProject";
     }
+
+
+
 
 
 }

@@ -12,26 +12,27 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class UpdateValidator implements Validator {
+public class UpdateUserValidator implements Validator {
 
     @Autowired
     private UserService userService;
 
-    @Override
-    public boolean supports(Class<?> aClass) {
-        return User.class.equals(aClass);
-    }
 
     @Override
     public void validate(Object o, Errors errors) {
         User user = (User) o;
-        User proxyUser = userService.findByLogin(user.getLogin());
+        User proxyUser = userService.getByName(user.getLogin());
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "login", "Required");
         if (user.getLogin().length() < 8 || user.getLogin().length() > 32) {
             errors.rejectValue("login", "Size.user.login");
         }
-
-        if ((userService.findByLogin(user.getLogin()) != null) &&
+        if (user.getFirstName().trim().length() == 0){
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "Required");
+        }
+        if (user.getLastName().trim().length() == 0){
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "Required");
+        }
+        if ((proxyUser != null) &&
                 (proxyUser.getId() != user.getId())) {
             errors.rejectValue("login", "Duplicate.user.login");
         }
@@ -46,14 +47,18 @@ public class UpdateValidator implements Validator {
                 errors.rejectValue("confirmPassword", "Different.user.password");
             }
         }
-        if(!validate(user.getEmail())){
+        if(!validateEmail(user.getEmail())){
             errors.rejectValue("email", "Email.invalid");
         }
     }
 
+    @Override
+    public boolean supports(Class<?> aClass) {
+        return User.class.equals(aClass);
+    }
 
 
-    public boolean validate(String emailStr) {
+    public boolean validateEmail(String emailStr) {
         Pattern validEmailAddressRegex =
                 Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = validEmailAddressRegex .matcher(emailStr);

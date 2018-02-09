@@ -35,14 +35,14 @@
 <a href="${contextPath}/edit/${user.id}">Edit Profile</a>
 ${user.firstName} ${user.lastName}
 
-room ${user.room}
+room ${room.name}
 
 Administrator menu
 <ul>
     <li><a href="${contextPath}/OfficeProject/showAll">All users</a></li>
     <li><a href="${contextPath}/OfficeProject/projects/all">Projects</a></li>
     <li><a href="${contextPath}/OfficeProject/rooms/all">Rooms</a></li>
-    <li><a href="${contextPath}/OfficeProject/dates/all">Dates</a></li>
+    <li><a href="${contextPath}/OfficeProject/dates">Dates</a></li>
 
 </ul>
 

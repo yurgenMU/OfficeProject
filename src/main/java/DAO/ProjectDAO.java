@@ -7,9 +7,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class ProjectDAO implements EntityDAO {
@@ -42,6 +45,16 @@ public class ProjectDAO implements EntityDAO {
     }
 
     @Override
+    public Project getEntityByName(String projectName) {
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery("from Project where name =:name");
+        query.setParameter("name", projectName);
+        Project ans = (Project) query.uniqueResult();
+        session.close();
+        return ans;
+    }
+
+    @Override
     public Project getEntity(int Id) {
         Session session = sessionFactory.openSession();
         Project project = session.get(Project.class, Id);
@@ -57,7 +70,7 @@ public class ProjectDAO implements EntityDAO {
         try {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-            session.merge(project);
+            session.update(project);
             transaction.commit();
         } catch (HibernateException he) {
             if (transaction != null) {
@@ -102,4 +115,28 @@ public class ProjectDAO implements EntityDAO {
         session.close();
         return projects;
     }
+
+//    public List<Project> notActualProjects(int userId) {
+//        Session session = sessionFactory.openSession();
+//        Query query = session.createQuery("select p.id, p.name from User u join u.projects p where u.id != :id");
+//        query.setParameter("id", userId);
+//        List<Object[]> proxyList = query.list();
+//        List<Project> ans = new ArrayList<>();
+//        proxyList.stream().forEach(x -> {
+//            Project p = new Project();
+//            p.setId((Integer) x[0]);
+//            p.setName((String) x[1]);
+//            ans.add(p);
+//        });
+//        session.close();
+//        return ans;
+//    }
+//
+//    public void removeUsers(List<Integer> userIdList) {
+//        Session session = sessionFactory.openSession();
+//        Query query = session.createQuery("delete from User u join u.projects p where u.id != :id");
+//
+//    }
+
+
 }

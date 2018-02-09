@@ -1,8 +1,10 @@
-CREATE DATABASE IF NOT EXISTS OFFICETASKDATABASE;
+CREATE DATABASE IF NOT EXISTS OFFICETASKDATABASE
+  DEFAULT CHARACTER SET utf8
+  DEFAULT COLLATE utf8_general_ci;
 USE OFFICETASKDATABASE;
 
 CREATE TABLE IF NOT EXISTS Rooms (
-  id   INT          NOT NULL,
+  id   INT          NOT NULL AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
   PRIMARY KEY (Id)
 )
@@ -22,26 +24,9 @@ CREATE TABLE IF NOT EXISTS Users (
 )
   ENGINE = InnoDB;
 
-# CREATE TABLE roles (
-#   id   INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-#   name VARCHAR(100) NOT NULL
-# );
-
-
-# -- Table for mapping user and roles: user_roles
-# CREATE TABLE user_roles (
-#   user_id INT NOT NULL,
-#   role_id INT NOT NULL,
-#
-#   FOREIGN KEY (user_id) REFERENCES users (id),
-#   FOREIGN KEY (role_id) REFERENCES roles (id),
-#
-#   UNIQUE (user_id, role_id)
-# );
-
 
 CREATE TABLE IF NOT EXISTS Projects (
-  id   INT          NOT NULL,
+  id   INT          NOT NULL AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
   PRIMARY KEY (Id)
 )
@@ -58,7 +43,7 @@ CREATE TABLE IF NOT EXISTS projects_users (
 
 CREATE TABLE IF NOT EXISTS Dates (
   id   INT  NOT NULL AUTO_INCREMENT,
-  date DATE NOT NULL UNIQUE ,
+  date DATE NOT NULL UNIQUE,
   PRIMARY KEY (id)
 )
   ENGINE = InnoDB;
@@ -76,3 +61,7 @@ CREATE TABLE IF NOT EXISTS users_dates (
 
 INSERT INTO Users VALUES (0, 'administrator', '$2a$11$pcMQeOxvn7Scj3lt00B84.CYRvnxpVSL/JpvPdG9jKLJIFmsNARDO',
                           'ROLE_ADMIN', 'admin', 'admin', 'admin@admin.com', NULL);
+INSERT INTO Users VALUES (0, 'yurgenMU', '$2a$11$pcMQeOxvn7Scj3lt00B84.CYRvnxpVSL/JpvPdG9jKLJIFmsNARDO',
+                          'ROLE_USER', 'Evheniy', 'Macsyom', 'ev.macsyom@gmail.com', NULL);
+INSERT INTO Users VALUES (0, 'midfielder', '$2a$11$pcMQeOxvn7Scj3lt00B84.CYRvnxpVSL/JpvPdG9jKLJIFmsNARDO',
+                          'ROLE_USER', 'Mesut', 'Ozil', 'yurgen-95@mail.ru', NULL);

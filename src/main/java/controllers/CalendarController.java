@@ -36,27 +36,33 @@ public class CalendarController {
         this.dateService = dateService;
     }
 
-    @GetMapping("/calendar")
-    public String getCalendar(Model model) {
-        Calendar c = Calendar.getInstance();
-        int y = c.get(Calendar.YEAR);
-        int m = c.get(Calendar.MONTH) + 1;
-        Month month = new Month(y, m);
-        int[][] days = month.getDays();
-        int height = month.getHeight();
-        String monthName = month.getMonthName(m);
-        String[] months = month.getMonths();
-        monthName.length();
-        model.addAttribute("days", days);
-        model.addAttribute("height", height);
-        model.addAttribute("year", y);
-        model.addAttribute("monthName", monthName);
-        model.addAttribute("months", months);
-        return "/resources/pages/calendar12.html";
-    }
 
+    /**
+     * Probable implementation using Java instead of JavaScript
+     *
+     * @param model instance of Model interface
+     * @return
+     */
+//    @GetMapping("/calendar")
+//    public String getCalendar(Model model) {
+//        Calendar c = Calendar.getInstance();
+//        int y = c.get(Calendar.YEAR);
+//        int m = c.get(Calendar.MONTH) + 1;
+//        Month month = new Month(y, m);
+//        int[][] days = month.getDays();
+//        int height = month.getHeight();
+//        String monthName = month.getMonthName(m);
+//        String[] months = month.getMonths();
+//        monthName.length();
+//        model.addAttribute("days", days);
+//        model.addAttribute("height", height);
+//        model.addAttribute("year", y);
+//        model.addAttribute("monthName", monthName);
+//        model.addAttribute("months", months);
+//        return "/resources/pages/calendar12.html";
+//    }
 
-    @RequestMapping(value = "OfficeProject/dates",params = {"userId"},  method = RequestMethod.GET)
+    @RequestMapping(value = "OfficeProject/dates", params = {"userId"}, method = RequestMethod.GET)
     private String getUserDates(Model model, @RequestParam("userId") int id) {
         User user = userService.get(id);
         Set<DateEntity> dates = user.getDates();
@@ -66,23 +72,47 @@ public class CalendarController {
 
     }
 
-    @RequestMapping(value = "OfficeProject/dates",params = {"userId"},  method = RequestMethod.POST)
+//    @PreAuthorize("isAuthenticated()")
+    @RequestMapping(value = "OfficeProject/dates", params = {"userId"}, method = RequestMethod.POST)
     private String addNew(@ModelAttribute("duedate") Date date, @ModelAttribute("userId") int userId, Model model) {
-        User user = userService.get(userId);
-        Set<DateEntity> dates = user.getDates();
-        DateEntity dateEntity = new DateEntity();
-        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-        DateEntity existing = dateService.findByDate(sqlDate);
+//        User user = userService.get(userId);
+//        Set<DateEntity> dates = user.getDates();
+//        DateEntity dateEntity = new DateEntity();
+//        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+//        DateEntity existing = dateService.findByDate(sqlDate);
+//        if (existing == null) {
+//            dateEntity.setDate(sqlDate);
+//        } else
+//            dateEntity = existing;
+//        dates.add(dateEntity);
+//        user.setDates(dates);
+//        userService.edit(user);
+        if(userService.isActual(userId)) {
+            dateService.setNewDate(userId, date);
+            getUserDates(model, userId);
+            return "redirect: /OfficeProject/dates/id=" + userId;
+        }
+        return "error";
+    }
 
-        if (existing == null){
-            dateEntity.setDate(sqlDate);
-        } else
-            dateEntity = existing;
-        dates.add(dateEntity);
-        user.setDates(dates);
-        userService.edit(user);
-        return getUserDates(model, userId);
+    @RequestMapping(value = "OfficeProject/dates", method = RequestMethod.GET)
+    private String getDatePage(){
+//        Set<User> users = dateService.getUsersByDate(date);
+//        if (users!= null){
+//            model.addAttribute("users", users);
+//        }
+        return "dateUsers";
+    }
 
+
+    @RequestMapping(value = "OfficeProject/users", method = RequestMethod.GET)
+    private String getUsersByDate(@RequestParam("adate") Date date, Model model){
+        Set<User> users = dateService.getUsersByDate(date);
+        if (users!= null){
+            model.addAttribute("users", users);
+            model.addAttribute("showDate", date);
+        }
+        return "dateUsers";
     }
 
 }

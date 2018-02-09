@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDAO.findByLogin(username);
+        User user = userDAO.getEntityByName(username);
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 

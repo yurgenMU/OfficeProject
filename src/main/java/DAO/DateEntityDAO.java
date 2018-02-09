@@ -2,7 +2,6 @@ package DAO;
 
 import model.AbstractEntity;
 import model.DateEntity;
-import model.Room;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -40,6 +39,11 @@ public class DateEntityDAO implements EntityDAO {
             if (session != null)
                 session.close();
         }
+    }
+
+    @Override
+    public DateEntity getEntityByName(String dateValue) {
+        return null;
     }
 
     @Override

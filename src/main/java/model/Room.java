@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "Rooms")
@@ -34,8 +35,7 @@ public class Room extends AbstractEntity {
     }
 
 
-    @OneToMany(mappedBy = "room")
-//    @JoinTable(name = "RoomsUsers", joinColumns = { @JoinColumn(name = "RoomId") }, inverseJoinColumns = { @JoinColumn(name = "UserId") })
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "room")
     public Set<User> getUsers() {
         return users;
     }
@@ -64,4 +64,12 @@ public class Room extends AbstractEntity {
         return result;
     }
 
+
+    public void addUser(User user){
+        this.users.add(user);
+    }
+
+    public void removeUser(int userId){
+        this.users = users.stream().filter(x -> x.getId() != userId).collect(Collectors.toSet());
+    }
 }

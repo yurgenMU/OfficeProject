@@ -10,9 +10,12 @@ public interface EntityService {
 
     AbstractEntity get(int id);
 
+    AbstractEntity getByName(String name);
+
     void edit(AbstractEntity entity);
 
     List<? extends AbstractEntity> getAll();
 
     void remove(int id);
+
 }

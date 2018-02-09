@@ -5,6 +5,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @DynamicUpdate
@@ -126,6 +127,13 @@ public class User extends AbstractEntity {
         this.projects = projects;
     }
 
+    public void addProject(Project project){
+        this.projects.add(project);
+    }
+
+    public void removeProject(Project project){
+        this.projects = projects.stream().filter(x-> x.id != project.getId()).collect(Collectors.toSet());
+    }
 
 
     @Override
@@ -134,11 +142,12 @@ public class User extends AbstractEntity {
                 "login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
-                ", first_name='" + firstName + '\'' +
-                ", last_name='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", room=" + room +
-                "} ";
+                ", id=" + id +
+                "} " + super.toString();
     }
 
     @ManyToOne(cascade = {CascadeType.ALL})
@@ -159,7 +168,7 @@ public class User extends AbstractEntity {
 
         User user = (User) o;
 
-        if (id != user.id) return false;
+//        if (id != user.id) return false;
         if (login != null ? !login.equals(user.login) : user.login != null) return false;
         if (role != null ? !role.equals(user.role) : user.role != null) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;

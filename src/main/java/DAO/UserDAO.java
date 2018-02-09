@@ -13,6 +13,8 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -50,7 +52,9 @@ public class UserDAO implements EntityDAO {
     @Override
     public User getEntity(int id) {
         Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         User user = session.get(User.class, id);
+        transaction.commit();
         session.close();
         return user;
     }
@@ -70,8 +74,9 @@ public class UserDAO implements EntityDAO {
                 transaction.rollback();
             he.printStackTrace();
         } finally {
-            if (session != null)
+            if (session != null) {
                 session.close();
+            }
         }
 
     }
@@ -124,10 +129,30 @@ public class UserDAO implements EntityDAO {
         return dates;
     }
 
-    public User findByLogin(String userLogin) {
+    @Override
+    public User getEntityByName(String userLogin) {
         Session session = sessionFactory.openSession();
         Query query = session.createQuery("from User where login =:login");
         query.setParameter("login", userLogin);
         return (User) query.uniqueResult();
+    }
+
+
+    public Set<User> notActualUsers(int projectId) {
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery("select distinct u.id, u.firstName, u.lastName " +
+                "from Project p join p.users u where p.id != :id");
+        query.setParameter("id", projectId);
+        List<Object[]> proxyList = query.list();
+        List<User> ans = new ArrayList<>();
+        proxyList.stream().forEach(x -> {
+            User u = new User();
+            u.setId((Integer) x[0]);
+            u.setFirstName((String) x[1]);
+            u.setLastName((String) x[2]);
+            ans.add(u);
+        });
+        session.close();
+        return new HashSet<>(ans);
     }
 }
