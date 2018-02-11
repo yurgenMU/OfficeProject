@@ -1,12 +1,9 @@
 package controllers;
 
-import calendarService.Month;
 import model.DateEntity;
-import model.Project;
 import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +13,9 @@ import service.UserService;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 public class CalendarController {
@@ -66,8 +62,10 @@ public class CalendarController {
     @RequestMapping(value = "OfficeProject/dates", params = {"userId"}, method = RequestMethod.GET)
     public String getUserDates(Model model, @RequestParam("userId") int id) {
         User user = userService.get(id);
-        Set<DateEntity> dates = user.getDates();
-
+        Set<String> dates = user.getDates().stream()
+                .map(x -> dateService.dateToString(x.getDate()))
+                .sorted()
+                .collect(Collectors.toSet());
         model.addAttribute("user", user);
         model.addAttribute("myDates", dates);
         return "userDates";
@@ -82,7 +80,7 @@ public class CalendarController {
             getUserDates(model, userId);
             return "redirect: /OfficeProject/dates?id=" + userId;
         }
-        return "error";
+        return "/resources/pages/error.html";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

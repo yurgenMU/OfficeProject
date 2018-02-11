@@ -13,6 +13,7 @@ import service.ProjectService;
 import service.UserService;
 import validator.ProjectValidator;
 
+import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class ProjectController {
 
     @Autowired
     private ProjectValidator projectValidator;
+
 
     @Autowired
     @Qualifier(value = "userService")
@@ -73,7 +75,7 @@ public class ProjectController {
         } else {
             projectService.add(project);
         }
-        return "redirect: /OfficeProject/projects/all";
+        return "redirect: /OfficeProject/OfficeProject/projects/all";
 
     }
 
@@ -110,7 +112,7 @@ public class ProjectController {
             projectService.deleteUsersOperation(id, selectedUsers);
         }
         getEditPage(model, id);
-        return "redirect: /OfficeProject/projects/edit?projectId=" + id;
+        return "redirect: /OfficeProject/OfficeProject/projects/edit?projectId=" + id;
     }
 
 
@@ -124,7 +126,7 @@ public class ProjectController {
             projectService.addToExisting(id, selectedUsers);
         }
         getEditPage(model, id);
-        return "redirect: /OfficeProject/projects/edit?projectId=" + id;
+        return "redirect: /OfficeProject/OfficeProject/projects/edit?projectId=" + id;
     }
 
 
@@ -138,11 +140,11 @@ public class ProjectController {
         projectValidator.validate(project, bindingResult);
         if (bindingResult.hasErrors()) {
             projectService.createEditPageModel(id, model);
-            return "redirect: /OfficeProject/projects/edit?projectId=" + id;
+            return "redirect: /OfficeProject/OfficeProject/projects/edit?projectId=" + id;
         }
         projectService.changeName(id, project.getName());
         getEditPage(model, id);
-        return "redirect: /OfficeProject/projects/edit?projectId=" + id;
+        return "redirect: /OfficeProject/OfficeProject/projects/edit?projectId=" + id;
 
     }
 

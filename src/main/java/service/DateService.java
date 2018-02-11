@@ -7,6 +7,8 @@ import model.DateEntity;
 import model.User;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -99,5 +101,10 @@ public class DateService implements EntityService {
             users = dateEntity.getUsers();
         }
         return users;
+    }
+
+    public String dateToString(java.sql.Date date) {
+        LocalDate localDate = new Date(date.getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return localDate.getDayOfMonth() + " " + localDate.getMonth() +" " + localDate.getYear();
     }
 }

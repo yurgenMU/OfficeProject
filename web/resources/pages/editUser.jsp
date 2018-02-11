@@ -6,6 +6,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+<link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

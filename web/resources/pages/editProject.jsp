@@ -8,11 +8,12 @@
 <script type="text/javascript" src="/resources/js/bootstrap.min.js"></script>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 
 <html>
-
+<link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
     <title>Edit project</title>
@@ -42,7 +43,7 @@
     </springForm:form>
 
 
-    <form name="form2" method="post" action="/OfficeProject/projects/removeFrom?projectId=${mproject.id}"
+    <form name="form2" method="post" action="${contextPath}/OfficeProject/projects/removeFrom?projectId=${mproject.id}"
           modelAttribute="mproject" class="form-signin">
 
         <table class="table table-striped">
@@ -78,7 +79,7 @@
     </form>
 
 
-    <form name="form3" method="post" action="/OfficeProject/projects/addInto?projectId=${mproject.id}"
+    <form name="form3" method="post" action="${contextPath}/OfficeProject/projects/addInto?projectId=${mproject.id}"
           modelAttribute="mproject" class="form-signin">
         <h1>Add users into project</h1>
         <%--<spring:bind path="name">--%>

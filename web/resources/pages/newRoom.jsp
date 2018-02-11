@@ -8,18 +8,19 @@
 <script type="text/javascript" src="/resources/js/bootstrap.min.js"></script>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 
 <html>
-
+<link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
     <title>Add new room</title>
 </head>
 <body>
 <div class="container-fluid">
-    <springForm:form name="form1" method="post" action="/OfficeProject/rooms/add" modelAttribute="room" class="form-signin">
+    <springForm:form name="form1" method="post" action="${contextPath}/OfficeProject/rooms/add" modelAttribute="room" class="form-signin">
         <h1>Room's name</h1>
         <%--<spring:bind path="name">--%>
         <div class="form-group ${status.error ? 'has-error' : ''}">

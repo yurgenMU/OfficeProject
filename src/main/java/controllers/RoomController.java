@@ -14,6 +14,7 @@ import service.RoomService;
 import service.UserService;
 import validator.RoomValidator;
 
+import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class RoomController {
         } else {
             roomService.add(room);
         }
-        return "redirect: /OfficeProject/rooms/all";
+        return "redirect: /OfficeProject/OfficeProject/rooms/all";
 
     }
 
@@ -109,7 +110,7 @@ public class RoomController {
             roomService.deleteUsersOperation(id, selectedUsers);
         }
         getEditPage(model, id);
-        return "redirect: /OfficeProject/rooms/edit?roomId=" + id;
+        return "redirect: /OfficeProject/OfficeProject/rooms/edit?roomId=" + id;
     }
 
 
@@ -123,7 +124,7 @@ public class RoomController {
             roomService.addToExisting(id, selectedUsers);
         }
         getEditPage(model, id);
-        return "redirect: /OfficeProject/rooms/edit?roomId=" + id;
+        return "redirect: /OfficeProject/OfficeProject/rooms/edit?roomId=" + id;
     }
 
 
@@ -141,7 +142,7 @@ public class RoomController {
         }
         roomService.changeName(id, room.getName());
         getEditPage(model, id);
-        return "redirect: /OfficeProject/rooms/edit?roomId=" + id;
+        return "redirect: /OfficeProject/OfficeProject/rooms/edit?roomId=" + id;
 
     }
 

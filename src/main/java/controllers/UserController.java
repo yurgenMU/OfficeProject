@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -124,7 +123,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "OfficeProject/users/add", method = RequestMethod.POST)
-    private String addNew(@ModelAttribute("user") User user, Model model) {
+    public String addNew(@ModelAttribute("user") User user, Model model) {
         user.setRole("ROLE_USER");
         userService.add(user);
         return "redirect:/";
@@ -142,8 +141,8 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "OfficeProject/users/edit", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('USER_ADMIN')")
-    private String updateExisting(@ModelAttribute("user") User userInfo, BindingResult bindingResult,
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+    public String updateExisting(@ModelAttribute("user") User userInfo, BindingResult bindingResult,
                                   @ModelAttribute("room") Room room, Model model, @RequestParam("userId") int userId) {
         userInfo.setId(userId);
         updateUserValidator.validate(userInfo, bindingResult);
@@ -168,7 +167,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "OfficeProject/users/edit", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('USER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     public String getEditPage(Model model, @RequestParam("userId") int userId) {
         User userInfo = userService.get(userId);
         userInfo.setPassword(null);
@@ -178,7 +177,7 @@ public class UserController {
             model.addAttribute("room", userInfo.getRoom());
             return "editUser";
         }
-        return "error";
+        return "/resources/pages/error.html";
     }
 
 
@@ -202,7 +201,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "OfficeProject/projects", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     public String getProjectsByUser(@RequestParam("userId") int userId, Model model) {
         User user = userService.get(userId);
         model.addAttribute("user", user);
