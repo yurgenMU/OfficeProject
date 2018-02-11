@@ -1,9 +1,10 @@
-package controllers;//package controllers;
+package controllers;
 
 import model.Project;
 import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,9 +14,7 @@ import service.UserService;
 import validator.ProjectValidator;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 public class ProjectController {
@@ -38,22 +37,26 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "OfficeProject/projects/all", method = RequestMethod.GET)
-    private String listProjects(Model model) {
+    public String listProjects(Model model) {
         List<Project> myProjects = projectService.getAll();
         model.addAttribute("myProjects", myProjects);
         return "listProject";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "OfficeProject/projects/add", method = RequestMethod.GET)
-    private String getAddPage(Model model) {
+    public String getAddPage(Model model) {
         projectService.createAddPageModel(model);
         return "newProject";
     }
 
 
     @RequestMapping(value = "OfficeProject/projects/add", method = RequestMethod.POST)
-    private String addNew(
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String addNew(
             @ModelAttribute("mproject") Project project,
             BindingResult bindingResult,
             @RequestParam(value = "userId", required = false) ArrayList<Integer> selectedUsers,
@@ -75,27 +78,31 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "OfficeProject/projects", params = {"userId"}, method = RequestMethod.GET)
-    private String getProjectsByUser(Model model, @RequestParam("userId") int id) {
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public String getProjectsByUser(Model model, @RequestParam("userId") int id) {
         projectService.createByUserModel(id, model);
         return "userProject";
 
     }
 
     @RequestMapping(value = "OfficeProject/projects/edit", method = RequestMethod.POST)
-    private String updateExisting(@ModelAttribute("mproject") Project mproject) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String updateExisting(@ModelAttribute("mproject") Project mproject) {
         projectService.add(mproject);
         return "projects";
     }
 
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "OfficeProject/projects/edit", method = RequestMethod.GET)
-    private String getEditPage(Model model, @RequestParam("projectId") int id) {
+    public String getEditPage(Model model, @RequestParam("projectId") int id) {
         projectService.createEditPageModel(id, model);
         return "editProject";
     }
 
     @RequestMapping(value = "OfficeProject/projects/removeFrom", method = RequestMethod.POST)
-    private String deleteUsersFromProject(@RequestParam("projectId") int id,
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String deleteUsersFromProject(@RequestParam("projectId") int id,
                                           Model model,
                                           @RequestParam(value = "auserId", required = false) ArrayList<Integer> selectedUsers
     ) {
@@ -108,7 +115,8 @@ public class ProjectController {
 
 
     @RequestMapping(value = "OfficeProject/projects/addInto", method = RequestMethod.POST)
-    private String addUsersIntoProject(@RequestParam("projectId") int id,
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String addUsersIntoProject(@RequestParam("projectId") int id,
                                        Model model,
                                        @RequestParam(value = "nuserId", required = false) ArrayList<Integer> selectedUsers
     ) {
@@ -121,7 +129,8 @@ public class ProjectController {
 
 
     @RequestMapping(value = "OfficeProject/projects/changeName", method = RequestMethod.POST)
-    private String changeProjectName(@RequestParam("projectId") int id,
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String changeProjectName(@RequestParam("projectId") int id,
                                      @ModelAttribute("mproject") Project project,
                                      BindingResult bindingResult,
                                      Model model
@@ -139,14 +148,16 @@ public class ProjectController {
 
 
     @RequestMapping(value = "OfficeProject/usersByProject/{id}", method = RequestMethod.GET)
-    private String getUsers(Model model, @PathVariable("id") int id) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String getUsers(Model model, @PathVariable("id") int id) {
         projectService.createByProjectModel(id, model);
         return "userProject";
     }
 
 
     @RequestMapping(value = "OfficeProject/projects/remove", method = RequestMethod.GET)
-    private String deleteProject(@RequestParam("projectId") int Id) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String deleteProject(@RequestParam("projectId") int Id) {
         projectService.remove(Id);
         return "redirect:/";
     }

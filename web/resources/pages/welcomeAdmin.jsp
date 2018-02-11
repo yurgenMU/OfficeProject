@@ -32,7 +32,7 @@
     </c:if>
 
 </div>
-<a href="${contextPath}/edit/${user.id}">Edit Profile</a>
+<a href="${contextPath}OfficeProject/users/edit?userId=${user.id}">Edit Profile</a>
 ${user.firstName} ${user.lastName}
 
 room ${room.name}

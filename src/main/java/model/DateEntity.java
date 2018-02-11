@@ -2,6 +2,7 @@ package model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -64,5 +65,11 @@ public class DateEntity extends AbstractEntity {
         int result = id;
         result = 31 * result + (date != null ? date.hashCode() : 0);
         return result;
+    }
+
+    private String getMonth(int index) {
+        String[] months = {"January", "February", "March", "April", "May", "June", "July"
+                , "August", "September", "October", "November", "December"};
+        return months[index - 1];
     }
 }

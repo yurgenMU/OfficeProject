@@ -34,10 +34,10 @@
 
 
     <form method="GET" action="users?adate=${datepicker}" name="frmAddDate">
-        <h1>Users who were in office in ${showDate}</h1>
+        <h1>Users who were in office at ${month} ${day}th </h1>
         Date : <input
             type="text" name="adate"
-            id="datepicker" value="asd"> <br/>
+            id="datepicker" value="${showDate}"> <br/>
         <input
                 type="submit" value="Show users"/>
         <a href="/" class="btn btn-info" role="button">to main page</a>

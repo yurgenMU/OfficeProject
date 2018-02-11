@@ -5,6 +5,7 @@ import model.Room;
 import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,21 +40,24 @@ public class RoomController {
 
 
     @RequestMapping(value = "OfficeProject/rooms/all", method = RequestMethod.GET)
-    private String listRooms(Model model) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String listRooms(Model model) {
         List<Room> room = roomService.getAll();
         model.addAttribute("rooms", room);
         return "listRoom";
     }
 
     @RequestMapping(value = "OfficeProject/rooms/add", method = RequestMethod.GET)
-    private String getAddPage(Model model) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String getAddPage(Model model) {
         roomService.createAddPageModel(model);
         return "newRoom";
     }
 
 
     @RequestMapping(value = "OfficeProject/rooms/add", method = RequestMethod.POST)
-    private String addNew(
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String addNew(
             @ModelAttribute("room") Room room,
             BindingResult bindingResult,
             @RequestParam(value = "userId", required = false) ArrayList<Integer> selectedUsers,
@@ -89,13 +93,15 @@ public class RoomController {
 
 
     @RequestMapping(value = "OfficeProject/rooms/edit", method = RequestMethod.GET)
-    private String getEditPage(Model model, @RequestParam("roomId") int id) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String getEditPage(Model model, @RequestParam("roomId") int id) {
         roomService.createEditPageModel(id, model);
         return "editRoom";
     }
 
     @RequestMapping(value = "OfficeProject/rooms/removeFrom", method = RequestMethod.POST)
-    private String deleteUsersFromRoom(@RequestParam("roomId") int id,
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String deleteUsersFromRoom(@RequestParam("roomId") int id,
                                           Model model,
                                           @RequestParam(value = "auserId", required = false) ArrayList<Integer> selectedUsers
     ) {
@@ -108,7 +114,8 @@ public class RoomController {
 
 
     @RequestMapping(value = "OfficeProject/rooms/addInto", method = RequestMethod.POST)
-    private String addUsersIntoRoom(@RequestParam("roomId") int id,
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String addUsersIntoRoom(@RequestParam("roomId") int id,
                                        Model model,
                                        @RequestParam(value = "nuserId", required = false) ArrayList<Integer> selectedUsers
     ) {
@@ -121,7 +128,8 @@ public class RoomController {
 
 
     @RequestMapping(value = "OfficeProject/rooms/changeName", method = RequestMethod.POST)
-    private String changeRoomName(@RequestParam("roomId") int id,
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String changeRoomName(@RequestParam("roomId") int id,
                                      @ModelAttribute("room") Room room,
                                      BindingResult bindingResult,
                                      Model model
@@ -138,15 +146,16 @@ public class RoomController {
     }
 
 
-//    @RequestMapping(value = "OfficeProject/usersByRoom/{id}", method = RequestMethod.GET)
-//    private String getUsers(Model model, @PathVariable("id") int id) {
-//        roomService.createByProjectModel(id, model);
-//        return "userProject";
-//    }
+    @RequestMapping(value = "OfficeProject/usersByRoom/{id}", method = RequestMethod.GET)
+    private String getUsers(Model model, @PathVariable("id") int id) {
+        roomService.createByProjectModel(id, model);
+        return "userProject";
+    }
 
 
     @RequestMapping(value = "OfficeProject/rooms/remove", method = RequestMethod.GET)
-    private String deleteProject(@RequestParam("roomId") int Id) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String deleteRoom(@RequestParam("roomId") int Id) {
         roomService.remove(Id);
         return "redirect:/";
     }

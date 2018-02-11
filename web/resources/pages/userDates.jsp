@@ -38,7 +38,7 @@
         <tbody>
         <c:forEach items="${myDates}" var="mydate">
             <tr>
-                <td>${mydate.date}</td>
+                <td>${mydate}</td>
             </tr>
         </c:forEach>
         </tbody>

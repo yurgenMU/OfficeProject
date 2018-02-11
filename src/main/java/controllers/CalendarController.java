@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import service.DateService;
 import service.UserService;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -61,58 +63,53 @@ public class CalendarController {
 //        model.addAttribute("months", months);
 //        return "/resources/pages/calendar12.html";
 //    }
-
     @RequestMapping(value = "OfficeProject/dates", params = {"userId"}, method = RequestMethod.GET)
-    private String getUserDates(Model model, @RequestParam("userId") int id) {
+    public String getUserDates(Model model, @RequestParam("userId") int id) {
         User user = userService.get(id);
         Set<DateEntity> dates = user.getDates();
+
         model.addAttribute("user", user);
         model.addAttribute("myDates", dates);
         return "userDates";
 
     }
 
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @RequestMapping(value = "OfficeProject/dates", params = {"userId"}, method = RequestMethod.POST)
-    private String addNew(@ModelAttribute("duedate") Date date, @ModelAttribute("userId") int userId, Model model) {
-//        User user = userService.get(userId);
-//        Set<DateEntity> dates = user.getDates();
-//        DateEntity dateEntity = new DateEntity();
-//        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-//        DateEntity existing = dateService.findByDate(sqlDate);
-//        if (existing == null) {
-//            dateEntity.setDate(sqlDate);
-//        } else
-//            dateEntity = existing;
-//        dates.add(dateEntity);
-//        user.setDates(dates);
-//        userService.edit(user);
-        if(userService.isActual(userId)) {
+    public String addNew(@ModelAttribute("duedate") Date date, @ModelAttribute("userId") int userId, Model model) {
+        if (userService.isActual(userId)) {
             dateService.setNewDate(userId, date);
             getUserDates(model, userId);
-            return "redirect: /OfficeProject/dates/id=" + userId;
+            return "redirect: /OfficeProject/dates?id=" + userId;
         }
         return "error";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "OfficeProject/dates", method = RequestMethod.GET)
-    private String getDatePage(){
-//        Set<User> users = dateService.getUsersByDate(date);
-//        if (users!= null){
-//            model.addAttribute("users", users);
-//        }
+    public String getDatePage() {
         return "dateUsers";
     }
 
 
     @RequestMapping(value = "OfficeProject/users", method = RequestMethod.GET)
-    private String getUsersByDate(@RequestParam("adate") Date date, Model model){
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String getUsersByDate(@RequestParam("adate") Date date, Model model) {
         Set<User> users = dateService.getUsersByDate(date);
-        if (users!= null){
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        if (users != null) {
             model.addAttribute("users", users);
-            model.addAttribute("showDate", date);
+            model.addAttribute("month", getMonth(localDate.getMonthValue()));
+            model.addAttribute("day", localDate.getDayOfMonth());
         }
         return "dateUsers";
+    }
+
+
+    private String getMonth(int index) {
+        String[] months = {"January", "February", "March", "April", "May", "June", "July"
+                , "August", "September", "October", "November", "December"};
+        return months[index - 1];
     }
 
 }
