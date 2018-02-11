@@ -23,7 +23,7 @@
 
 
     <a href="/" class="btn btn-info" role="button">To main page</a>
-    <a href="${contextPath}/OfficeProject/rooms/remove?roomId=${room.id}" class="btn btn-info" role="button">Remove room</a>
+    <a href="/OfficeProject/OfficeProject/rooms/remove?roomId=${room.id}" class="btn btn-info" role="button">Remove room</a>
 
 
     <springForm:form name="form1" method="post" action="/OfficeProject/rooms/changeName?roomId=${room.id}"
@@ -42,7 +42,7 @@
     </springForm:form>
 
 
-    <form name="form2" method="post" action="/OfficeProject/rooms/removeFrom?roomId=${room.id}"
+    <form name="form2" method="post" action="/OfficeProject/OfficeProject/rooms/removeFrom?roomId=${room.id}"
           modelAttribute="room" class="form-signin">
 
         <table class="table table-striped">
@@ -78,7 +78,7 @@
     </form>
 
 
-    <form name="form3" method="post" action="/OfficeProject/rooms/addInto?roomId=${room.id}"
+    <form name="form3" method="post" action="/OfficeProject/OfficeProject/rooms/addInto?roomId=${room.id}"
           modelAttribute="room" class="form-signin">
         <h1>Add users into room</h1>
         <%--<spring:bind path="name">--%>

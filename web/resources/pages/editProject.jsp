@@ -24,7 +24,7 @@
 
 
       <a href="/" class="btn btn-info" role="button">To main page</a>
-        <a href="${contextPath}/OfficeProject/projects/remove?projectId=${mproject.id}" class="btn btn-info" role="button">Remove project</a>
+        <a href="/OfficeProject/OfficeProject/projects/remove?projectId=${mproject.id}" class="btn btn-info" role="button">Remove project</a>
 
 
     <springForm:form name="form1" method="post" action="/OfficeProject/projects/changeName?projectId=${mproject.id}"
@@ -43,7 +43,7 @@
     </springForm:form>
 
 
-    <form name="form2" method="post" action="${contextPath}/OfficeProject/projects/removeFrom?projectId=${mproject.id}"
+    <form name="form2" method="post" action="/OfficeProject/OfficeProject/projects/removeFrom?projectId=${mproject.id}"
           modelAttribute="mproject" class="form-signin">
 
         <table class="table table-striped">
@@ -79,7 +79,7 @@
     </form>
 
 
-    <form name="form3" method="post" action="${contextPath}/OfficeProject/projects/addInto?projectId=${mproject.id}"
+    <form name="form3" method="post" action="/OfficeProject/OfficeProject/projects/addInto?projectId=${mproject.id}"
           modelAttribute="mproject" class="form-signin">
         <h1>Add users into project</h1>
         <%--<spring:bind path="name">--%>
